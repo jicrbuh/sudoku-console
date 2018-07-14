@@ -11,6 +11,7 @@ Board* createBoard(int blockHeight, int blockLength, int** mtx) {
 	}
 	board->block_height=blockHeight;
 	board->block_length=blockLength;
+	board->edge_size=blockLength*blockHeight;
 
 	int boardSize = blockHeight*blockLength;
 	mtx = calloc(boardSize, 1+sizeof(int*)); /* alloc one extra ptr*/
@@ -26,7 +27,7 @@ Board* createBoard(int blockHeight, int blockLength, int** mtx) {
 			mtx[i][j] = i*boardSize+j;
 		}
 	}
-	board.matrix=mtx;
+	board->matrix=mtx;
 
 	return board;
 
@@ -49,4 +50,13 @@ void printBoard(Board* board){
 }
 void printBoard(Board* board){
 
+}
+
+int numberOfFilledCells(Board* board) {
+/*returns the number of filled cells*/
+	return 0;
+}
+
+int numberOfBlankCells(Board* board) {
+	return 0;
 }

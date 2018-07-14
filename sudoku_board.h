@@ -11,6 +11,7 @@
 typedef struct board_t {
 	int block_height;
 	int block_length;
+	int edge_size;
 	int** matrix;
 } Board;
 
