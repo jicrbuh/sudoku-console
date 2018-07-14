@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*use this https://stackoverflow.com/questions/105653/int-matrix-with-pointers-in-c-memory-allocation-confusion*/
 Board* createBoard(int blockHeight, int blockLength, int** mtx) {
 
 	Board board = (Board *) calloc(sizeof(Board));
@@ -38,7 +39,7 @@ Board* copyBoard(Board* board){
 void destroyBoard(Board* board){
 
 	for( int i=0; board[i] != NULL; i++ ) {
-	    free( board[i] );
+	    free(board[i]);
 	}
 	free(board->matrix);
 	free(board->block_height); /*maybe can't free those because they aren't pointers?*/

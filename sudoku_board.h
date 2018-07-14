@@ -18,6 +18,5 @@ Board* createBoard(int block_height, int block_length, int** matrix);
 Board* copyBoard(Board* board);
 void destroyBoard(Board* board);
 void printBoard(Board* board);
-void printBoard(Board* board);
 
 #endif /* SUDOKU_BOARD_H_ */
