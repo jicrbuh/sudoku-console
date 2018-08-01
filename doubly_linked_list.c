@@ -41,10 +41,10 @@ void insertFirst(Node** head, Step newStep)
 
 void insertAfter(Node* prevNode, Step newStep)
 {
-
+	Node* newNode = NULL;
     assert(prevNode != NULL);
 
-    Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode = (struct Node*)malloc(sizeof(struct Node));
     newNode->step = newStep;
     newNode->next = prevNode->next;
     prevNode->next = newNode;
