@@ -13,9 +13,18 @@ typedef struct board_t {
 	int block_length;
 	int edge_size;
 	int** matrix;
+	int** isErroneaous;
+	int** isFixed;
+	int state;
+
 } Board;
 
-Board* createBoard(int block_height, int block_length, int** matrix);
+/*
+ * creates an empty Board with block_height and block_length.
+ * the board is initialized to '0'
+ * returns a pointer to the board, or NULL if memory allocation failed
+ * */
+Board* createBoard(int block_height, int block_length);
 Board* copyBoard(Board* board);
 void destroyBoard(Board* board);
 void printBoard(Board* board);
