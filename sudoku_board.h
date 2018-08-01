@@ -9,10 +9,14 @@
 #define SUDOKU_BOARD_H_
 
 typedef struct board_t {
-	int block_height;
-	int block_length;
-	int edge_size;
+	int blockHeight;
+	int blockLength;
+	int edgeSize;
+	int mode;
+	int markErrors;
 	int** matrix;
+	int** isErroneous;
+	int** isFixed;
 } Board;
 
 Board* createBoard(int block_height, int block_length, int** matrix);

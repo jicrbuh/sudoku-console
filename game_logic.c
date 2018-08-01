@@ -1,28 +1,53 @@
-/*contains ???*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-int solve(char* fileName, int* mode) {
+int solve(char* fileName, Board* board) {
 	/*filename - full or relative*/
 	/*if file not opened return -1*/
 	/*changed the mode to solve (1)*/
 	/*available in all modes*/
 	/*resets doubly linked list*/
 	/*change to correct mode*/
+	FILE* file = NULL;
+	file = fopen(fileName,"r"); /*check if opened successfully*/
+	if (file == NULL) {
+		return -1;
+	}
+	loadToBoard(file,board);
+	board->mode = 1;
 	return 0;
 }
 
-int edit(char* fileName, int* mode) {
+int edit(char* fileName, Board* board) {
 	/*filename - full or relative*/
 	/*filename \0 - empty board*/
 	/*if file not opened return -2*/
 	/*changed the mode to edit (2)*/
 	/*available in all modes*/
-	return 1;
+
+	FILE* file = NULL;
+	if (fileName == NULL) {
+		resetBoard(board);
+		board->mode = 2;
+		return 0;
+	}
+	file = fopen(fileName,"r"); /*check if opened successfully*/
+	if (file == NULL) {
+		return -2;
+	}
+	loadToBoard(file,board);
+	board->mode = 2;
+	return 0;
 }
 
-int mark_errors(int x) {
-	return 1;
+int mark_errors(int x, Board* board) {
 	/*available in solve (1) mode*/
 	/*x is 0 or 1!*/
+	if (x != 0 && x != 1) {
+		return -3;
+	}
+	board.mode = x;
 }
 
 int print_board(Board board) {
@@ -70,6 +95,44 @@ int save(Board board, char* fileName, int* mode) {
 	 * if the file saving falis - error (-14)
 	 * if the process finished without problems parse_command will send the corresponding message
 	 */
+	return 1;
+}
+
+int hint(Board board, int x, int y) {
+	/*check for the following errors:
+	 * 1) check if x or y are out of range (1-N) - error (-4)
+	 * 2) check if board has erroneous values - error (-6)
+	 * [erroneous values means neighbors with same value]
+	 * 3) check if cell (x,y) is fixed - error (-5)
+	 * 4) check if cell (x,y) already conatins a value - error (-14)
+	 * [run ILP now]
+	 * 5) if board is unsolvable - error (-15)
+	 *
+	 * if no error occurred return the value the ILP suggested for cell (x,y) - message (5) + the value!
+	 * */
+	return 1;
+}
+
+int num_solutions(Board board) {
+	/*check for the following errors:
+	 * 1) check if board has erroneous values - error (-6)
+	 * [now run exhaustive backtracking which should return the number of solutions]
+	 * if no error - message (6) + the value*/
+	return 1;
+}
+
+int autofill(Board board) {
+	/*check if board has erroneous values - error (-6)*/
+	return 1;
+}
+
+int reset(Board board) {
+	/*message (7)*/
+	return 1;
+}
+
+int exit(Board board) {
+	/*message (8)*/
 }
 /*calls the right function from game_logic*/
 /*prints errors for specific functions*/
