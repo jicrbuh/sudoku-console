@@ -16,7 +16,7 @@ int solve(char* fileName, Board* board) {
 	}
 	loadToBoard(file,board);
 	board->mode = 1;
-	return 0;
+	return 1;
 }
 
 int edit(char* fileName, Board* board) {
@@ -30,7 +30,7 @@ int edit(char* fileName, Board* board) {
 	if (fileName == NULL) {
 		resetBoard(board);
 		board->mode = 2;
-		return 0;
+		return 1;
 	}
 	file = fopen(fileName,"r"); /*check if opened successfully*/
 	if (file == NULL) {
@@ -38,7 +38,7 @@ int edit(char* fileName, Board* board) {
 	}
 	loadToBoard(file,board);
 	board->mode = 2;
-	return 0;
+	return 1;
 }
 
 int mark_errors(int x, Board* board) {
@@ -47,18 +47,29 @@ int mark_errors(int x, Board* board) {
 	if (x != 0 && x != 1) {
 		return -3;
 	}
-	board.mode = x;
-}
-
-int print_board(Board board) {
-	/*available in solve, edit (1,2) mode*/
+	board->mode = x;
 	return 1;
 }
 
-int set(int x, int y, int z) {
+int print_board(Board* board) {
+	/*available in solve, edit (1,2) mode*/
+	printBoard(board);
+	return 1;
+}
+
+int set(int x, int y, int z, Board* board) {
 	/*available in solve, edit (1,2) mode
 	 * if x,y,z not in range error (-4)
 	 * if x,y, fixed (-5)*/
+	if (x<0 || y<0 || z<0 || x > board->edgeSize-1 || y > board->edgeSize-1 || z > board->edgeSize) {
+		return -4;
+	}
+	if (board->isFixed[x][y] == 1) {
+		return -5;
+	}
+	/*TODO "Clear any move beyond the current move from the undo/redo list, then add
+the new move to the end of the list and mark it as the current move" */
+	board->matrix[x][y] = z;
 
 	return 1;
 }
@@ -134,6 +145,7 @@ int reset(Board board) {
 int exit(Board board) {
 	/*message (8)*/
 }
+/*TODO when finishing implementing the functions update the arguments user interface calls*/
 /*calls the right function from game_logic*/
 /*prints errors for specific functions*/
 /*switch case for printing different errors, starting from -1*/

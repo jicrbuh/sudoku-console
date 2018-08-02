@@ -30,7 +30,7 @@ int parse_command(int* mode, char *userInput, Board board){
 	else if (strcmp(command, "set")) {
 		if (mode == 0) return 0; /*not allowed in init mode*/
 		if (endptr1 == NULL || endptr2 == NULL || endptr3 == NULL) return -4; /*verify that all arguments are integers*/
-		return set(firstArgumentAsInt,secondArgumentAsInt,thirdArgumentAsInt); /*set will check if the arguments are in range*/
+		return set(firstArgumentAsInt-1,secondArgumentAsInt-1,thirdArgumentAsInt); /*set will check if the arguments are in range*/
 	}
 	else if (strcmp(command,"validate")) {
 		if (mode == 0) return 0; /*not allowed in init mode*/
@@ -106,18 +106,18 @@ int read_print_error(int mode, Board board, int hint){
 			printf("Board reset\n");
 			break;
 		case (6):
-			printf("Number of solutions: %d\n", 99); /*change 99 to be the second argument*/
+			printf("Number of solutions: %d\n", 99); /*change 99 to be the second argument TODO TO BE TRANSFERRED INTO GAME_LOGIC*/
 			if (99 == 1) printf("This is a good board!\n");
 			else printf("The puzzle has more than 1 solution, try to edit it further\n");
 			break;
 		case (5):
-			printf("Hint: set cell to %d\n", 99); /*change 99 to be the second argument*/
+			printf("Hint: set cell to %d\n", 99); /*change 99 to be the second argument TODO TO BE TRANSFERRED INTO GAME_LOGIC*/
 			break;
 		case (4):
-			printf("Undo %d,%d: from %d to %d\n",0,0,0,0); /*change the d values according to linked list*/
+			printf("Undo %d,%d: from %d to %d\n",0,0,0,0); /*change the d values according to linked list TODO TO BE TRANSFERRED INTO GAME_LOGIC*/
 			break;
 		case (3):
-			printf("Undo %d,%d: from %d to %d\n",0,0,0,0); /*change the d values according to linked list*/
+			printf("Redo %d,%d: from %d to %d\n",0,0,0,0); /*change the d values according to linked list TODO TO BE TRANSFERRED INTO GAME_LOGIC*/
 			break;
 		case (2):
 			printf("Validation passed: board is solvable\n");

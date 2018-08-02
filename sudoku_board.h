@@ -17,6 +17,7 @@ typedef struct board_t {
 	int** matrix;
 	int** isErroneous;
 	int** isFixed;
+	Node* currNode;
 } Board;
 
 /*
