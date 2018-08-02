@@ -67,7 +67,7 @@ int set(int x, int y, int z, Board* board) {
 	if (board->isFixed[x][y] == 1) {
 		return -5;
 	}
-	/*TODO "Clear any move beyond the current move from the undo/redo list, then add
+	/*TODO "Clear any move beyond the current move from the undo/redo list, then add after doubly linked list
 the new move to the end of the list and mark it as the current move" */
 	board->matrix[x][y] = z;
 
