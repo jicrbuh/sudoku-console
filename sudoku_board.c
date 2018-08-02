@@ -57,9 +57,8 @@ void printBoard(Board* board){
 	printCellRow(board, 1);
 }
 
-/*todo should know if in edit mode or not! maybe add to the struct?*/
 void printCell(Board* board, int i, int j) {
-	if (board->state == 0) {
+	if (board->mode == 0) {
 
 	}
 

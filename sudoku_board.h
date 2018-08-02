@@ -14,6 +14,7 @@ typedef struct board_t {
 	int edgeSize;
 	int mode;
 	int markErrors;
+	int boardIsErroneous;
 	int** matrix;
 	int** isErroneous;
 	int** isFixed;
@@ -29,5 +30,6 @@ Board* createBoard(int block_height, int block_length);
 Board* copyBoard(Board* board);
 void destroyBoard(Board* board);
 void printBoard(Board* board);
+void clearBoard(Board* board);
 
 #endif /* SUDOKU_BOARD_H_ */

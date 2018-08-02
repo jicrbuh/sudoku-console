@@ -64,37 +64,67 @@ int set(int x, int y, int z, Board* board) {
 	if (x<0 || y<0 || z<0 || x > board->edgeSize-1 || y > board->edgeSize-1 || z > board->edgeSize) {
 		return -4;
 	}
+	board->matrix[x][y] = z;
 	if (board->isFixed[x][y] == 1) {
 		return -5;
 	}
+	if (cellIsErroneous(board,x,y)) {
+		board->isErroneous[x][y] = 1;
+	}
+	print_board(board);
+	if (board->mode == 1) {
+		if (numberOfFilledCells == board->edgeSize*board->edgeSize) {
+			validate(board);
+			if (!board->boardIsErroneous) {
+				board->mode = 0;
+				return 10;
+			}
+			else {
+				return 9;
+			}
+		}
+	}
 	/*TODO "Clear any move beyond the current move from the undo/redo list, then add after doubly linked list
 the new move to the end of the list and mark it as the current move" */
-	board->matrix[x][y] = z;
-
-	return 1;
+	return 666; /*shouldn't get here, somthing's wrong*/
 }
 
-int validate(Board board) {
+int validate(Board* board) {
 	/*check if the board is erroneous, namely, it has 2 cells with same number which are neighbors
 	 * if it is erroneous - error (-6)
 	 * if it is unsolvable - error(-7)
 	 * else, it is valid - message(2) */
-
-	return 1;
+	if (board->boardIsErroneous) {
+		return -6;
+	}
+	if (1==1) { /*check with ILP if the board is solvable (if it is, go in the if statement)*/
+		return 2;
+	}
+	return -7;
 }
 
-int generate(Board board, int x, int y) {
+int generate(Board* board, int x, int y) {
 	/*if 1000 iterations fail - error (-10)*/
-	return 1;
+	int errorCounter = 0;
+	while (errorCounter < 1000) {
+		clearBoard(board);
+		if (fillXRandomCells(board,x) && ILPSolver(board)){
+			eraseAllButYRandomCells(board,y);
+			return 1;
+		}
+	}
+	return -10;
 }
 
 int undo(Board board) {
 	/*if no moves to undo - error (-11)*/
+	/*TODO: the undo function in game logic: implement after doubly likned list is implemented*/
 	return 1;
 }
 
 int redo(Board board) {
 	/*if no moves to redo - error (-12)*/
+	/*TODO: the redo function in game logic: implement after doubly likned list is implemented*/
 	return 1;
 }
 
@@ -106,6 +136,21 @@ int save(Board board, char* fileName, int* mode) {
 	 * if the file saving falis - error (-14)
 	 * if the process finished without problems parse_command will send the corresponding message
 	 */
+	FILE* fptr = NULL;
+	fptr = fopen(fileName, "w");
+
+	if (board->mode == 2) {
+		if (board->boardIsErroneous) {
+			return -6;
+		}
+		if (!validate(board)) {
+			return -13;
+		}
+	}
+	if (fptr == NULL) {
+		return -14;
+	}
+	saveToFile(fptr,board);
 	return 1;
 }
 
@@ -121,7 +166,23 @@ int hint(Board board, int x, int y) {
 	 *
 	 * if no error occurred return the value the ILP suggested for cell (x,y) - message (5) + the value!
 	 * */
-	return 1;
+	if (x<0 || y<0 || x > board->edgeSize-1 || y > board->edgeSize-1) {
+		return -4;
+	}
+	if (board->boardIsErroneous) {
+		return -6;
+	}
+	if (board->isFixed[x][y]) {
+		return -5;
+	}
+	if (board->matrix[x][y] != 0) {
+		return -14;
+	}
+	if (!ILPSolver(board)) {
+		return -15;
+	}
+	/*TODO update board->hint*/
+	return 5;
 }
 
 int num_solutions(Board board) {
@@ -145,7 +206,7 @@ int reset(Board board) {
 int exit(Board board) {
 	/*message (8)*/
 }
-/*TODO when finishing implementing the functions update the arguments user interface calls*/
+/*TODO when finishing implementing the functions update the arguments of the functions in the user interface calls functions from here*/
 /*calls the right function from game_logic*/
 /*prints errors for specific functions*/
 /*switch case for printing different errors, starting from -1*/
