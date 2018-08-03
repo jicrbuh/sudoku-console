@@ -61,7 +61,7 @@ int parse_command(int* mode, char *userInput, Board board){
 	else if (strcmp(command, "hint")) {
 		if (mode != 1) return 0; /*only allowed in solve mode*/
 		if (endptr1 == NULL || endptr2 == NULL) return -4; /*verify that all arguments are integers*/
-		return hint(board,firstArgumentAsInt,secondArgumentAsInt);
+		return hint(board,firstArgumentAsInt-1,secondArgumentAsInt-1);
 	}
 	else if (strcmp(command, "num_solutions")) {
 		if (mode == 0) return 0; /*not allowed in init mode*/
@@ -91,7 +91,7 @@ int read_command(int mode){
 int read_print_error(int mode, Board board, int hint){
 	char user_input[COMMAND_LENGTH]  = {0};
 	/*prints 'please enter a command'*/
-	printf("please enter a command\n");
+	printf("Enter your command\n");
 	fgets(user_input,COMMAND_LENGTH,stdin);
 	if (user_input[COMMAND_LENGTH] != 0) {
 		printf("ERROR: invalid command\n"); /*command too long - returning -1*/
@@ -99,6 +99,13 @@ int read_print_error(int mode, Board board, int hint){
 	}
 	/*calls read_command and prints errors if necessary*/
 	switch(parse_command(mode)) {
+
+		case(10):
+			printf("Puzzle solved successfully\n");
+			break;
+		case (9):
+			printf("Puzzle solution erroneous\n");
+			break;
 		case (8):
 			printf("Exiting...\n");
 			break;
