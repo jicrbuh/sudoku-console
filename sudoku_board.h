@@ -31,5 +31,6 @@ Board* copyBoard(Board* board);
 void destroyBoard(Board* board);
 void printBoard(Board* board);
 void clearBoard(Board* board);
+void resizeMatrices(Board* board);
 
 #endif /* SUDOKU_BOARD_H_ */
