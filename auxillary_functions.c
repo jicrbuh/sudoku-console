@@ -14,7 +14,7 @@ int markAllErrors(Board* board) {
 	return 0;
 }
 
-int CheckIfXYIsErronous(Board* board, int x, int y) {
+int isXYErronous(Board* board, int x, int y) {
 	/*TODO*/
 	return 0;
 }
