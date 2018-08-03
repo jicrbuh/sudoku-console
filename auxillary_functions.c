@@ -5,7 +5,7 @@ int loadToBoard(FILE* filename, Board* board) {
 }
 /*TODO add print-board when implementing "new puzzle"*/
 int resetBoard(Board* board) {
-	return 0;
+	return 0; /*TODO resetBoard after implementing doubly linked list*/
 }
 
 int markAllErrors(Board* board) {
@@ -15,7 +15,7 @@ int markAllErrors(Board* board) {
 }
 
 int cellIsErronous(Board* board, int x, int y) {
-	/*TODO complete iserroneous function*/
+	/*TODO complete is erroneous function*/
 	return 0;
 }
 
@@ -27,11 +27,44 @@ int ILPSolver(Board* board) {
 	return 0;
 }
 
+int exhaustiveBackTracking(Board* board) {
+	return 0; /*returns number of solutions*/
+}
+
 int eraseAllButYRandomCells(Board* board, int y) {
 	return 0;
 }
 
-int saveToFile(FILE* fptr,Board* board) {
+int saveToFile(FILE* fptr,Board* board) { /*TODO in loading remember to take care of files with multiple spaces between cells*/
 	/*if in edit mode, save all cells as fixed*/
+	int i,j;
+	fprintf(fptr,"%d %d\n",board->blockLength,board->blockHeight);
+	for (i=0 ; i<board->edgeSize ; i++) {
+		for (j=0 ; j<board->edgeSize ; j++) {
+			if (j == board->edgeSize-1) {
+				if (board->mode == 2) {
+					fprintf(fptr,"%d.\n",board[i][j]);
+				}
+				else {
+					fprintf(fptr,"%d\n",board[i][j]);
+				}
+			}
+			else {
+				if (board->mode == 2) {
+					fprintf(fptr,"%d. ",board[i][j]);
+				}
+				else {
+					fprintf(fptr,"%d ",board[i][j]);
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+
+int autofillBoard(Board* board) {
+	/*iterates over all the empty cells and fills ones that
+	 * has only one solution and prints a message for each set done */
 	return 0;
 }

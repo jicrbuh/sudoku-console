@@ -15,6 +15,7 @@ typedef struct board_t {
 	int mode;
 	int markErrors;
 	int boardIsErroneous;
+	int tempNumOfSolutions;
 	int** matrix;
 	int** isErroneous;
 	int** isFixed;
