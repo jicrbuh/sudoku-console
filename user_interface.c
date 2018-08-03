@@ -32,7 +32,7 @@ int parse_command(int* mode, char *userInput, Board board){
 		if (endptr1 == NULL || endptr2 == NULL || endptr3 == NULL) return -4; /*verify that all arguments are integers*/
 		return set(firstArgumentAsInt-1,secondArgumentAsInt-1,thirdArgumentAsInt); /*set will check if the arguments are in range*/
 	}
-	else if (strcmp(command,"validate")) {
+	else if (strcmp(command,"validate"	)) {
 		if (mode == 0) return 0; /*not allowed in init mode*/
 		return validate(board);
 	}

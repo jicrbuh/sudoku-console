@@ -14,6 +14,10 @@ int markAllErrors(Board* board) {
 	return 0;
 }
 
+<<<<<<< HEAD
+int isXYErronous(Board* board, int x, int y) {
+	/*TODO*/
+=======
 int cellIsErronous(Board* board, int x, int y) {
 	/*TODO complete is erroneous function*/
 	return 0;
