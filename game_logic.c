@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "sudoku_board.h"
+#include "doubly_linked_list.h"
+#include "auxillary_functions.h"
 
 int solve(char* fileName, Board* board) {
 	/*filename - full or relative*/

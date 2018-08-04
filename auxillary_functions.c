@@ -1,8 +1,11 @@
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "sudoku_board.h"
+#include "doubly_linked_list.h"
 /*todo probably need to change to Board**
  * or to add to sudoku_board.c functions that alter the matrix size*/
 int loadToBoard(FILE* fptr, Board* board) {
-
 
 	/*implement by the instructions in "files format"*/
 
@@ -47,10 +50,10 @@ int markAllErrors(Board* board) {
 	return 0;
 }
 
-<<<<<<< HEAD
+
 int isXYErronous(Board* board, int x, int y) {
 	/*TODO*/
-=======
+
 int cellIsErronous(Board* board, int x, int y) {
 	/*TODO complete iserroneous function*/
 	return 0;
@@ -70,6 +73,6 @@ int eraseAllButYRandomCells(Board* board, int y) {
 
 int saveToFile(FILE* fptr,Board* board) {
 	/*if in edit mode, save all cells as fixed*/
->>>>>>> 9021f7a91050afbd975acf0a78719b69be6e1901
+
 	return 0;
 }

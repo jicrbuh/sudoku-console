@@ -5,32 +5,16 @@
 #include <stdio.h>
 #include <string.h>
 #include <dos.h>
+#include <assert.h>
 #include <stdlib.h>
-
-typedef struct {
-	int i;
-	int j;
-	int old;
-	int new;
-} Step;
-
-typedef struct {
-	Step step;
-	struct Node *next;
-	struct Node *prev;
-} Node;
-
-typedef struct {
-	Node *head;
-	Node *tail;
-} DLlist;
+#include "doubly_linked_list.h"
 
 
 void insertFirst(Node** head, Step newStep)
 {
     Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->step = newStep;
-    newNode->next = (*head);
+    newNode->next = *head;
     newNode->prev = NULL;
 
     if ((*head) != NULL) /*if the list isn't empty, link head prev to new node*/
@@ -41,6 +25,7 @@ void insertFirst(Node** head, Step newStep)
 
 void insertAfter(Node* prevNode, Step newStep)
 {
+	Node* tempNode = NULL;
 	Node* newNode = NULL;
     assert(prevNode != NULL);
 
@@ -50,8 +35,38 @@ void insertAfter(Node* prevNode, Step newStep)
     prevNode->next = newNode;
     newNode->prev = prevNode;
 
-    if (newNode->next != NULL)
-        newNode->next->prev = newNode; /*link the node after newNode*/
+    if (newNode->next != NULL){  /*link the node after newNode*/
+    	tempNode = newNode->next;
+    	tempNode->prev = newNode;
+
+       /* (newNode->next)->prev = newNode;*/
+    }
+}
+
+void deleteLast(Node** head){
+
+	Node* last = NULL;
+	Node* beforeLast = NULL;
+	last = *head;
+
+
+	if (*head == NULL) { /*if list is empty, do nothing*/
+		return;
+	}
+
+	if ((*head)->next == NULL) { /*if the list has only one node, make (*head) point at NULL*/
+		free(*head);
+		head = NULL;
+	}
+	while (last->next != NULL) /*search for the end of the list*/
+		last = last->next;
+
+	beforeLast = last->prev;
+	free(last);					/*delete last node*/
+	beforeLast->next = NULL;	/*make new last->next = NULL*/
+
+	return;
+
 }
 
 
@@ -82,14 +97,22 @@ void insertLast(Node** head, Step step)
     return;
 }
 
-void printStep(Node* node) {
+
+void printNode(Node* node) {
 	Step *step = node->step;
+	printStep(step);
+}
+
+void printStep(Step* step) {
 	printf("%d,%d: %d -> %d\n", step->i,step->j,step->old, step->new);
 }
 
-void printList(Node* node)
+
+void printList(Node** head)
 {
     Node* last = NULL;
+    Node* node = *head;
+
     printf("printing list from start:\n");
     while (node != NULL) {
         printStep(node);
@@ -100,12 +123,14 @@ void printList(Node* node)
     printf("end of list\n");
 }
 
+destroyNode(Node* node){
+	return;
+}
 
-
-void destroyList(Node *head) {
+void destroyList(Node **head) {
 	Node *curNode= NULL;
 	Node *nextNode= NULL;
-	curNode = head;
+	curNode = *head;
 	while(curNode!= NULL) {
 		nextNode = curNode->next;
 		free(curNode->step);
@@ -113,4 +138,14 @@ void destroyList(Node *head) {
 		curNode = nextNode;
 	}
 
+}
+
+Step* createStep(int x, int y, int old, int new) {
+	Step* step = (Step*)malloc(sizeof(Step));
+	step->i = x;
+	step->j = y;
+	step->old = old;
+	step->new = new;
+
+	return step;
 }

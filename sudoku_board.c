@@ -12,9 +12,9 @@ Board* createBoard(int blockHeight, int blockLength) {
 	if (board == NULL) {
 		return NULL; /*if allocation failed, returns NULL*/
 	}
-	board->block_height=blockHeight;
-	board->block_length=blockLength;
-	board->edge_size=boardSize;
+	board->blockHeight=blockHeight;
+	board->blockLength=blockLength;
+	board->edgeSize=boardSize;
 
 	/*allocate memory for the board's matrix*/
 	mtx = calloc(boardSize, sizeof(int*));
@@ -30,30 +30,30 @@ Board* createBoard(int blockHeight, int blockLength) {
 }
 
 Board* copyBoard(Board* board){
-	Board* copied = createBoard(board->block_height, board->block_length);
+	Board* copied = createBoard(board->blockHeight, board->blockLength);
 	if (copied == NULL) {
 		return NULL; /*if allocation failed, returns NULL*/
 	}
-	copyMatrix(board,copied,board->edge_size);
+	copyMatrix(board,copied,board->edgeSize);
 	return copied;
 }
 void destroyBoard(Board* board){
 	int i;
 	/*frees the matrix*/
-	for(i=0; i < board->edge_size; i++ ) {
+	for(i=0; i < board->edgeSize; i++ ) {
 	    free(board->matrix[i]);
 	}
 
 	free(board->matrix);
-	free(board->block_height); /*maybe can't free those because they aren't pointers?*/
-	free(board->block_length);
+	free(board->blockHeight); /*maybe can't free those because they aren't pointers?*/
+	free(board->blockLength);
 	free(board);
 }
 void printBoard(Board* board){
 /*board is NxN
  * n-by-m blocks (n rows of blocks, m columns of blocks)
  * board printing format has N+n+1 rows*/
-	printSeparatorRow(board->block_height,board->edge_size);
+	printSeparatorRow(board->blockHeight,board->edgeSize);
 	printCellRow(board, 1);
 }
 

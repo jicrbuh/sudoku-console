@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "sudoku_board.h"
+#include "doubly_linked_list.h"
+#include "game_logic.h"
 #define COMMAND_LENGTH 257
 /*parses user commands and calls the functions from game_logic (maybe)*/
 /*take strcmp at the beginning once, check if it's possible*/
