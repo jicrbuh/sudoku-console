@@ -33,7 +33,7 @@ void deleteLast(Node** head);
 void insertLast(Node** head, Step step);
 void printNode(Node* node);
 void printStep(Node* node);
-void printList(Node* node);
+void printList(Node** node);
 void destroyNode(Node* node);
 void destroyList(Node *head);
 Step* createStep(int x, int y, int old, int new);
