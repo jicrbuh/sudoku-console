@@ -116,8 +116,8 @@ int read_print_error(int mode, Board board, int hint){
 			printf("Board reset\n");
 			break;
 		case (6):
-			printf("Number of solutions: %d\n", 99); /*change 99 to be the second argument TODO TO BE TRANSFERRED INTO GAME_LOGIC*/
-			if (99 == 1) printf("This is a good board!\n");
+			printf("Number of solutions: %d\n", board->tempNumOfSolutions); /*change 99 to be the second argument TODO TO BE TRANSFERRED INTO GAME_LOGIC*/
+			if (board->tempNumOfSolutions == 1) printf("This is a good board!\n");
 			else printf("The puzzle has more than 1 solution, try to edit it further\n");
 			break;
 		case (5):

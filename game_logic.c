@@ -157,13 +157,13 @@ int save(Board board, char* fileName, int* mode) {
 	return 1;
 }
 
-int hint(Board board, int x, int y) {
+int hint(Board* board, int x, int y) {
 	/*check for the following errors:
 	 * 1) check if x or y are out of range (1-N) - error (-4)
 	 * 2) check if board has erroneous values - error (-6)
 	 * [erroneous values means neighbors with same value]
 	 * 3) check if cell (x,y) is fixed - error (-5)
-	 * 4) check if cell (x,y) already conatins a value - error (-14)
+	 * 4) check if cell (x,y) already contains a value - error (-14)
 	 * [run ILP now]
 	 * 5) if board is unsolvable - error (-15)
 	 *
@@ -193,21 +193,35 @@ int num_solutions(Board board) {
 	 * 1) check if board has erroneous values - error (-6)
 	 * [now run exhaustive backtracking which should return the number of solutions]
 	 * if no error - message (6) + the value*/
+	if (board->boardIsErroneous) {
+		return -6;
+	}
+	board->tempNumOfSolutions = exhaustiveBackTracking(board); /*TODO use the answer from the forum to decide what to do in case of 0 solutions*/
+	if (board->tempNumOfSolutions == 1) {
+		return 6;
+	}
 	return 1;
 }
 
 int autofill(Board board) {
 	/*check if board has erroneous values - error (-6)*/
+	if (board->boardIsErroneous) {
+		return -6;
+	}
+	autofillBoard(board);
+	print_board(board);
 	return 1;
 }
 
 int reset(Board board) {
 	/*message (7)*/
+	/*TODO reset function: implement after implementing double linked list*/
 	return 1;
 }
 
 int exit(Board board) {
 	/*message (8)*/
+	/*TODO exit function - free resources, implement after we are sure of all the resources in the program*/
 }
 /*TODO when finishing implementing the functions update the arguments of the functions in the user interface calls functions from here*/
 /*calls the right function from game_logic*/
