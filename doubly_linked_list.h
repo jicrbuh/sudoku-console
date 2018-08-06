@@ -1,43 +1,54 @@
 /*
- * doubly_linked_list.h
+ * newDLL.h
  *
- *  Created on: 4 Aug 2018
+ *  Created on: 6 Aug 2018
  *      Author: chen
  */
 
 #ifndef DOUBLY_LINKED_LIST_H_
 #define DOUBLY_LINKED_LIST_H_
 
-typedef struct {
+typedef struct Step{
 	int i;
 	int j;
 	int old;
 	int new;
+	DLL* list;
 } Step;
 
-typedef struct {
-	Step step;
-	struct Node *next;
-	struct Node *prev;
+typedef struct Node  {
+	Step* step;
+	struct Node* next;
+	struct Node* prev;
 } Node;
 
-typedef struct {
-	Node *head;
-	Node *tail;
-} DLlist;
 
 
-void insertFirst(Node** head, Step newStep);
-void insertAfter(Node* prevNode, Step newStep);
-void deleteLast(Node** head);
-void insertLast(Node** head, Step step);
-void printNode(Node* node);
-void printStep(Node* node);
-void printList(Node** node);
-void destroyNode(Node* node);
-void destroyList(Node *head);
-Step* createStep(int x, int y, int old, int new);
+typedef struct DLL {
+	Node* head;
+	Node* tail;
+} DLL;
+
+DLL* createEmptyList();
+Step* createStep (int i, int j, int old, int new);
+Node* createNode(Step *step);
+Node* createNode(int i, int j, int old, int new);
+
+void addLast(DLL* list, Step *step);
+void addLast(DLL* list, int i, int j, int old, int new);
+void addFirst (DLL* list, Step *step);
+void addFirst(DLL* list, int i, int j, int old, int new);
+
+void deleteFirst(DLL* list);
+void deleteLast(DLL* list);
+void deleteAllNextNodes(DLL* list, Node* node);
 
 
+void printStep(Step* step);
+void printList(DLL* list);
+void printListFromTail(DLL* list);
 
-#endif /* DOUBLY_LINKED_LIST_H_ */
+void freeList (DLL* list);
+void freeNode(Node* node);
+void freeStep(Step* step);
+#endif /* DOUBLY_LINKED_LIST_H_*/
