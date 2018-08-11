@@ -15,7 +15,7 @@ Board* createBoard(int blockHeight, int blockLength) {
 	board->blockHeight=blockHeight;
 	board->blockLength=blockLength;
 	board->edgeSize=boardSize;
-
+	/*TODO b(in createBoard) when the board struct is final, add all missing fields here*/
 	/*allocate memory for the board's matrix*/
 	mtx = calloc(boardSize, sizeof(int*));
 	if (mtx == NULL) {
@@ -67,9 +67,9 @@ void printCell(Board* board, int i, int j) {
 void printCellRow(Board* board, int rowIdx) {
 	int i;
 	printf("|");
-	for (i=0; i < board->edge_size; i++) {
+	for (i=0; i < board->edgeSize; i++) {
 		printf("%2d",board->matrix[rowIdx][i]);
-		if ((i+1)%board->block_length == 0) {
+		if ((i+1)%board->blockLength == 0) {
 			printf("|");
 		}
 	}
@@ -90,8 +90,8 @@ int numberOfFilledCells(Board* board) {
 /*returns the number of filled cells*/
 	int i,j;
 	int filledNum=0;
-	for(i=0; i<board->edge_size;i++){
-		for(j=0;j < board->edge_size;j++){
+	for(i=0; i<board->edgeSize;i++){
+		for(j=0;j < board->edgeSize;j++){
 			if (board->matrix[i][j] != 0) {
 				filledNum++;
 			}
@@ -101,7 +101,7 @@ int numberOfFilledCells(Board* board) {
 }
 
 int numberOfBlankCells(Board* board) {
-	return board->edge_size*board->edge_size - numberOfFilledCells(board);
+	return board->edgeSize*board->edgeSize - numberOfFilledCells(board);
 }
 
 void copyMatrix(int** orig, int** new, int size){
@@ -109,6 +109,24 @@ void copyMatrix(int** orig, int** new, int size){
 	for(i = 0; i < size; i++){
 		for(j = 0; j < size; j++){
 			new[i][j] = orig[i][j];
+		}
+	}
+}
+/* Input:
+ * A square matrix and its edge size
+ *
+ * Output:
+ * None
+ *
+ * Description:
+ * Sets all the values of matrix to 0*/
+
+/*TODO b(clearMatrix) make sure the pointers stuff are OK and fix*/
+void clearMatrix(int** matrix, int edgeSize) {
+	int i,j;
+	for (i=0 ; i<edgeSize ; i++) {
+		for (j=0 ; j<edgeSize ; j++) {
+			matrix[i][j] = 0;
 		}
 	}
 }

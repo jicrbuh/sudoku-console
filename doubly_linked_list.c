@@ -16,13 +16,10 @@ DLL* createEmptyList() {
 	DLL* list = (DLL*)malloc(sizeof(DLL));
 	list->head=NULL;
 	list->tail=NULL;
-
-
 	return list;
 }
 
 void printList(DLL* list) {
-
 	Node* node = NULL;
 	assert(list != NULL);
 	printf("\nprinting list from beginning:\n");
@@ -32,8 +29,15 @@ void printList(DLL* list) {
 	else {
 		node = list->head;
 		while(node != NULL) {
-			printStep(node->step);
-			node =(Node*) node->next;
+			if (node->step->list != NULL) {
+				printf("Autofill cells start\n");
+				printList(node->step->list);
+				printf("Autofill cells end\n");
+			}
+			else {
+				printStep(node->step);
+			}
+			node = node->next;
 		}
 	}
 	printf("\n");
@@ -58,6 +62,9 @@ void printListFromTail(DLL* list) {
 }
 
 void freeStep(Step* step) {
+	if (step->list != NULL) {
+		freeList(step->list);
+	}
 	free(step);
 }
 
@@ -88,6 +95,15 @@ Step* createStep (int i, int j, int old, int new) {
 	step->old = old;
 	step->new = new;
 
+
+	return step;
+}
+
+
+Step* createStep (int i, int j, int old, int new, DLL* list) {
+	Step* step = createStep (i, j, old, new);
+	step->list = list;
+
 	return step;
 }
 
@@ -96,8 +112,12 @@ void printStep(Step* step) {
 }
 
 Node* createNode(int i, int j, int old, int new) {
+	return createNode(i, j, old, new, NULL);
+}
+
+Node* createNode(int i, int j, int old, int new, DLL* list) {
 	Node* node = NULL;
-	Step* step = createStep(i,j,old,new);
+	Step* step = createStep(i,j,old,new,list);
 
 	return createNode(step);
 }
@@ -111,6 +131,7 @@ Node* createNode(Step *step) {
 	node->step = step;
 	return node;
 }
+
 
 void addLast(DLL* list, Step *step) {
 	Node* node = createNode(step);
@@ -128,12 +149,15 @@ void addLast(DLL* list, Step *step) {
 }
 
 void addLast(DLL* list, int i, int j, int old, int new) {
-	Step* step = createStep( i,  j,  old,  new);
+	 addLast(list, i, j, old, new, NULL);
+}
+
+void addLast(DLL* list, int i, int j, int old, int new, DLL* innerList) {
+	Step* step = createStep( i,  j,  old,  new, innerList);
 	addLast(list, step);
 }
 
 void addFirst (DLL* list, Step *step) {
-
 	Node* node = createNode(step);
 	printf("adding node to the head of the list\n");
 	if (list->head == NULL) { /*if the list is empty*/
@@ -152,6 +176,10 @@ void addFirst (DLL* list, Step *step) {
 }
 
 void addFirst(DLL* list, int i, int j, int old, int new) {
+	addFirst(list, i, j, old, new, NULL);
+}
+
+void addFirst(DLL* list, int i, int j, int old, int new, DLL* innerList) {
 	Step* step = createStep( i,  j,  old,  new);
 	addFirst(list, step);
 }
@@ -164,7 +192,7 @@ void deleteAllNextNodes(DLL* list, Node* node) {
 
 	curr = node->next;
 	node->next = NULL;
-	while (curr != NULL) {/*deleteing all nodes after node*/
+	while (curr != NULL) {/*deleting all nodes after node*/
 		next = curr->next;
 		freeNode(curr);
 		curr = next;

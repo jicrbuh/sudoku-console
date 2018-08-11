@@ -60,35 +60,58 @@ int print_board(Board* board) {
 	return 1;
 }
 
-int set(int x, int y, int z, Board* board) {
+int set(int x, int y, int z, Board* board, int autofill) {
 	/*available in solve, edit (1,2) mode
 	 * if x,y,z not in range error (-4)
 	 * if x,y, fixed (-5)*/
+	/*this if block should be entered only when the function is called by autofill command.
+	 * in this case the parameter autofill==1
+	 * after set with autofill print message (11)*/
+	/*TODO DLL and fix the printing in autofill IMPORTANT!!!(for DLL)in autofill mode we need to take the entire sequence of sets as one "move"*/
+	int oldval;
+	if (autofill) {
+		board->matrix[x][y] = z;
+		board->lastXSet = x;
+		board->lastYSet = y;
+		return 11;
+	}
+	/*check if x,y,z are in range*/
 	if (x<0 || y<0 || z<0 || x > board->edgeSize-1 || y > board->edgeSize-1 || z > board->edgeSize) {
 		return -4;
 	}
-	board->matrix[x][y] = z;
+	/*check if cell is fixed*/
 	if (board->isFixed[x][y] == 1) {
 		return -5;
 	}
+	oldval = board->matrix[x][y];
+	/*set the value*/
+	board->matrix[x][y] = z;
 	if (cellIsErroneous(board,x,y)) {
 		board->isErroneous[x][y] = 1;
 	}
+	/*delete all redo moves (all moves after currNode)*/
+	deleteAllNextNodes(board->movesList, board->currNode);
+
+	/*add move to the end of the list*/
+	addLast(board->movesList, x, y, oldval, z);
+
+	/*update the tail of the list*/
+	board->currNode = board->movesList->tail;
+
 	print_board(board);
-	if (board->mode == 1) {
-		if (numberOfFilledCells == board->edgeSize*board->edgeSize) {
+	if (board->mode == 1) { /*if we are in solve mode*/
+		if (numberOfFilledCells == board->edgeSize*board->edgeSize) { /*if board is full*/
 			validate(board);
 			if (!board->boardIsErroneous) {
 				board->mode = 0;
 				return 10;
+				/*TODO DLL in set mode when finish successfully and go to init what to do with DLL*/
 			}
 			else {
 				return 9;
 			}
 		}
 	}
-	/*TODO "Clear any move beyond the current move from the undo/redo list, then add after doubly linked list
-the new move to the end of the list and mark it as the current move" */
 	return 666; /*shouldn't get here, somthing's wrong*/
 }
 
@@ -136,7 +159,7 @@ int save(Board board, char* fileName, int* mode) {
 	 * 1) if board is erroneous - error (-6)
 	 * 2) if it is unsolvable - error (-13)
 	 * error that can happen in every mode:
-	 * if the file saving falis - error (-14)
+	 * if the file saving fails - error (-14)
 	 * if the process finished without problems parse_command will send the corresponding message
 	 */
 	FILE* fptr = NULL;
@@ -184,7 +207,7 @@ int hint(Board* board, int x, int y) {
 	if (!ILPSolver(board)) {
 		return -15;
 	}
-	/*TODO update board->hint*/
+	/*TODO after ILP update board->lastHint*/
 	return 5;
 }
 
@@ -196,32 +219,55 @@ int num_solutions(Board board) {
 	if (board->boardIsErroneous) {
 		return -6;
 	}
-	board->tempNumOfSolutions = exhaustiveBackTracking(board); /*TODO use the answer from the forum to decide what to do in case of 0 solutions*/
-	if (board->tempNumOfSolutions == 1) {
+	board->lastNumOfSolutions = exhaustiveBackTracking(board);
+	if (board->lastNumOfSolutions == 1) {
 		return 6;
 	}
 	return 1;
 }
 
-int autofill(Board board) {
+int autofill(Board* board) {
 	/*check if board has erroneous values - error (-6)*/
+	int i,j,val;
 	if (board->boardIsErroneous) {
 		return -6;
 	}
-	autofillBoard(board);
+
+	/*fill board->autofillMatrix cells that has only one legal value with that value*/
+	for (int i=0 ; i < board->edgeSize; i++) {
+		for (int j=0 ; j < board->edgeSize ; j++) {
+			val = cellHasOnePossibleValue(board,i,j);
+			if (val > 0) {
+				board->lastAutofillMatrix[i][j] = val;
+			}
+		}
+	}
+
+	/*call set on the values filled to board->autofillMatrix*/
+	for (int i=0 ; i < board->edgeSize; i++) {
+		for (int j=0 ; j < board->edgeSize ; j++) {
+			if (board->lastAutofillMatrix[i][j] > 0) {
+				set(i,j,board->lastAutofillMatrix[i][j],board,1);
+			}
+		}
+	}
+
+	/*clear board->autofillMatrix to prepare it for next call to autofill*/
+	clearMatrix(board->lastAutofillMatrix, board->edgeSize);
 	print_board(board);
 	return 1;
 }
 
-int reset(Board board) {
+int reset(Board* board) {
 	/*message (7)*/
 	/*TODO reset function: implement after implementing double linked list*/
 	return 1;
 }
 
-int exit(Board board) {
+int exit(Board* board) {
 	/*message (8)*/
 	/*TODO exit function - free resources, implement after we are sure of all the resources in the program*/
+	return 1;
 }
 /*TODO when finishing implementing the functions update the arguments of the functions in the user interface calls functions from here*/
 /*calls the right function from game_logic*/
