@@ -39,7 +39,7 @@ int loadToBoard(FILE* fptr, Board* board) {
 	fclose (fptr);
 	return 0;
 }
-/*TODO add print-board when implementing "new puzzle"*/
+/*TODO b add print-board when implementing "new puzzle"*/
 int resetBoard(Board* board) {
 	return 0; /*TODO resetBoard after implementing doubly linked list*/
 }
@@ -49,13 +49,10 @@ int markAllErrors(Board* board) {
 	 * marks all the errors on the board*/
 	return 0;
 }
-
-
-int isXYErronous(Board* board, int x, int y) {
-	/*TODO*/
-
+/*note for us: deleted function named isXYErroneous because it is a duplicate of cellIsErroneous*/
 int cellIsErronous(Board* board, int x, int y) {
-	/*TODO complete is erroneous function*/
+	/*TODO complete is erroneous function
+	 * Called by */
 	return 0;
 }
 
@@ -102,9 +99,22 @@ int saveToFile(FILE* fptr,Board* board) { /*TODO in loading remember to take car
 	return 0;
 }
 
-
-int autofillBoard(Board* board) {
-	/*iterates over all the empty cells and fills ones that
-	 * has only one solution and prints a message for each set done */
-	return 0;
+/*
+ *
+ * Called by:
+ * autofill(Board* board) from module game_logic.c
+ *
+ * Input:
+ * Board and cell coordinates - x for the column and y for the row
+ *
+ * Output:
+ * 0 - if the cell has more than one possible values
+ * the only possible value - otherwise
+ *
+ * Remark:
+ * Output > 0 iff the cell has one possible solution
+ *
+ * */
+int cellHasOnePossibleValue(Board* board,int x,int y) {
+	return 1;
 }
