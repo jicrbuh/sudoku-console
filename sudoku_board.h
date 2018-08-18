@@ -7,6 +7,7 @@
 
 #ifndef SUDOKU_BOARD_H_
 #define SUDOKU_BOARD_H_
+#include "doubly_linked_list.h"
 
 typedef struct board_t {
 
@@ -28,18 +29,11 @@ typedef struct board_t {
 	/* the number of solutions to the board according to the last call to num_solutions command*/
 	int lastNumOfSolutions;
 
-	/* last set in autofill - used to print the information about the last set operation*/
-	int lastXSet;
-	int lastYSet;
-
 	/* last hint given */
 	int lastHint;
 
-	/* a matrix with the dimensions of the board which contains in each cell:
-	 * the single legal value this cell can have according to the board
-	 * or 0 if the number of legal values for the cell is not 1.
-	 * all this, according to the last call to the command autofill*/
-	int** lastAutofillMatrix;
+	/* the number of filled cells in the sudoku board*/
+	int numberOfFilledCells;
 
 	/* the matrix that represents the sudoku board*/
 	int** matrix;
