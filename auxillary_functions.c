@@ -6,36 +6,43 @@
 #include "doubly_linked_list.h"
 
 void printSetUndo(Board* board) {
-	char* typeOfNew = board->movesList->tail->step->new == 0 ? "%s" : "%d";
-	char* typeOfOld = board->movesList->tail->step->old == 0 ? "%s" : "%d";
-	printf("Undo %d,%d: from " + typeOfNew + " to " + typeOfOld + "\n",
-		board->movesList->tail->step->j,
-		board->movesList->tail->step->i,
-		board->movesList->tail->step->new == 0 ? "_" : board->movesList->tail->step->new,
-		board->movesList->tail->step->old == 0 ? "_" : board->movesList->tail->step->old);
+	if (board->movesList->tail->step->new == 0 && board->movesList->tail->step->old == 0) {
+		printf("Undo %d,%d: from %s to %s\n", board->movesList->tail->step->j,
+				board->movesList->tail->step->i, "_", "_");
+	}
+	else if (board->movesList->tail->step->new == 0 && board->movesList->tail->step->old != 0) {
+		printf("Undo %d,%d: from %s to %d\n", board->movesList->tail->step->j,
+				board->movesList->tail->step->i, "_", board->movesList->tail->step->old);
+	}
+	else if (board->movesList->tail->step->new != 0 && board->movesList->tail->step->old == 0) {
+		printf("Undo %d,%d: from %d to %s\n", board->movesList->tail->step->j,
+				board->movesList->tail->step->i, board->movesList->tail->step->new, "_");
+	}
+	else {
+		printf("Undo %d,%d: from %d to %d\n", board->movesList->tail->step->j,
+				board->movesList->tail->step->i, board->movesList->tail->step->new, board->movesList->tail->step->old);
+	}
 }
 
 void printAutofillUndo(Board* board) {
-	char* typeOfNew;
-	char* typeOfOld;
 	Node* innerNode = board->movesList->tail->step->list->tail;
 	while (innerNode != NULL) {
-		typeOfNew = board->movesList->tail->step->new == 0 ? "%s" : "%d";
-		typeOfOld = board->movesList->tail->step->old == 0 ? "%s" : "%d";
 		if (innerNode->step->new == 0 && innerNode->step->old == 0) {
-
+			printf("Undo %d,%d: from %s to %s\n", innerNode->step->j,
+					innerNode->step->i, "_", "_");
 		}
-		else if (innerNode->step->new == 0 && innerNode->step->old == 1) {
-
+		else if (innerNode->step->new == 0 && innerNode->step->old != 0) {
+			printf("Undo %d,%d: from %s to %d\n", innerNode->step->j,
+					innerNode->step->i, "_", innerNode->step->old);
 		}
-		else if (innerNode->step->new == 1 && innerNode->step->old == 0) {
-
+		else if (innerNode->step->new != 0 && innerNode->step->old == 0) {
+			printf("Undo %d,%d: from %d to %s\n", innerNode->step->j,
+					innerNode->step->i, innerNode->step->new, "_");
 		}
-		printf("Undo %d,%d: from " + typeOfNew + " to " + typeOfOld + "\n",
-		board->movesList->tail->step->list->tail->step->j,
-		board->movesList->tail->step->list->tail->step->i,
-		board->movesList->tail->step->list->tail->step->new == 0 ? "_" : board->movesList->tail->step->new,
-		board->movesList->tail->step->list->tail->step->old == 0 ? "_" : board->movesList->tail->step->old);
+		else {
+			printf("Undo %d,%d: from %d to %d\n", innerNode->step->j,
+					innerNode->step->i, innerNode->step->new, innerNode->step->old);
+		}
 		innerNode = innerNode->prev;
 	}
 }
