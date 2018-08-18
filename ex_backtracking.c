@@ -55,15 +55,19 @@ int isBlockErr(Board* board, int x, int y){
 }
 
 int exBackTracking(Board* board){
-	int** boardCopy = NULL;
+	Board* boardCopy = NULL;
 	DLL* stack = createEmptyList();
 	int solutionsNum = 0;
 
 
 	boardCopy = copyBoard(board);
-	if (boardCopy == NULL) { /* if board allocation failed, return -2*/
-		return -2;
+	if (boardCopy == NULL) { /* if board allocation failed, return -999*/
+		return -999;
 	}
+	fixAll(boardCopy); /* all filled cells in board are marked as fixed in copyBoard*/
+
+	addFirst(stack, 0,0, boardCopy->matrix[0][0],boardCopy->matrix[0][0]); /*adds the first node*/
+
 
 
 	return 666;

@@ -38,14 +38,43 @@ Board* createBoard(int blockHeight, int blockLength) {
 	return board;
 }
 
+/*creates a partial copy of board (only some parameters are copied:
+ * blockHeight, blockLength, edgeSize, matrix, isFixed*/
 Board* copyBoard(Board* board){
 	Board* copied = createBoard(board->blockHeight, board->blockLength);
+
 	if (copied == NULL) {
 		return NULL; /*if allocation failed, returns NULL*/
 	}
+
+	copied->boardIsErroneous = board->boardIsErroneous;
+
 	copyMatrix(board->matrix,copied->matrix,board->edgeSize);
+	copyMatrix(board->isFixed, copied->isFixed, board->edgeSize);
+
 	return copied;
 }
+
+/*changed all cells to fixed (if cell isn't empty)*/
+void fixAll(Board* board) {
+	int i,j;
+
+	for (i=0; i<board->edgeSize; i++) {
+		for (j=0; j<board->edgeSize; j++) {
+			if (board->matrix[i][j] != 0) {
+				board->isFixed[i][j] = 1;
+			}
+		}
+	}
+
+}
+
+/*not sure if needed!*/
+Board* deepCopy(Board* board) {
+	returns NULL;
+
+}
+
 void destroyBoard(Board* board){
 	int i;
 	/*frees the matrix*/
