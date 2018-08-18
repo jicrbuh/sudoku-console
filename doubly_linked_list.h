@@ -13,7 +13,7 @@ typedef struct Step{
 	int j;
 	int old;
 	int new;
-	DLL* list;
+	struct DLL* list;
 } Step;
 
 typedef struct Node  {
@@ -54,14 +54,14 @@ Step* createStep (int i, int j, int old, int new);
  *
  * Output:
  * a pointer to the step described above */
-Step* createStep (int i, int j, int old, int new, DLL* list);
+Step* createListStep (int i, int j, int old, int new, DLL* list);
 
 /* Input:
  * a Step
  *
  * Output:
  * Node* that points to Step */
-Node* createNode(Step *step);
+Node* createNodeByStep(Step *step);
 
 /*
  * Input:
@@ -70,7 +70,7 @@ Node* createNode(Step *step);
  *
  * Output:
  * Node that points to createStep(i, j, old, new, list) */
-Node* createNode(int i, int j, int old, int new, DLL* list);
+Node* createListNode(int i, int j, int old, int new, DLL* list);
 
 /*
  * Input:
@@ -89,7 +89,7 @@ Node* createNode(int i, int j, int old, int new);
  *
  * Description:
  * adds a node to the end of list*/
-void addLast(DLL* list, Step *step);
+void addLastStep(DLL* list, Step *step);
 
 /* Input:
  * pointer to a doubly linked list,
@@ -114,7 +114,7 @@ void addLast(DLL* list, int i, int j, int old, int new);
  *
  * Description:
  * adds a node to the end of list*/
-void addLast(DLL* list, int i, int j, int old, int new, DLL* innerList);
+void addLastList(DLL* list, int i, int j, int old, int new, DLL* innerList);
 
 /* Input:
  * pointer to a doubly linked list, step - pointer to a step to be added as the content of a new last node
@@ -124,7 +124,7 @@ void addLast(DLL* list, int i, int j, int old, int new, DLL* innerList);
  *
  * Description:
  * adds a node to the beginning of list*/
-void addFirst (DLL* list, Step *step);
+void addFirstListStep (DLL* list, Step *step);
 
 /* Input:
  * pointer to a doubly linked list,
@@ -149,7 +149,7 @@ void addFirst(DLL* list, int i, int j, int old, int new);
  *
  * Description:
  * adds a node to the beginning of list*/
-void addFirst(DLL* list, int i, int j, int old, int new, DLL* innerList);
+void addFirstList(DLL* list, int i, int j, int old, int new, DLL* innerList);
 
 /* Input:
  * Doubly linked list

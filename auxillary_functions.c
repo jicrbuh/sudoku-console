@@ -1,8 +1,45 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "sudoku_board.h"
 #include "doubly_linked_list.h"
+
+void printSetUndo(Board* board) {
+	char* typeOfNew = board->movesList->tail->step->new == 0 ? "%s" : "%d";
+	char* typeOfOld = board->movesList->tail->step->old == 0 ? "%s" : "%d";
+	printf("Undo %d,%d: from " + typeOfNew + " to " + typeOfOld + "\n",
+		board->movesList->tail->step->j,
+		board->movesList->tail->step->i,
+		board->movesList->tail->step->new == 0 ? "_" : board->movesList->tail->step->new,
+		board->movesList->tail->step->old == 0 ? "_" : board->movesList->tail->step->old);
+}
+
+void printAutofillUndo(Board* board) {
+	char* typeOfNew;
+	char* typeOfOld;
+	Node* innerNode = board->movesList->tail->step->list->tail;
+	while (innerNode != NULL) {
+		typeOfNew = board->movesList->tail->step->new == 0 ? "%s" : "%d";
+		typeOfOld = board->movesList->tail->step->old == 0 ? "%s" : "%d";
+		if (innerNode->step->new == 0 && innerNode->step->old == 0) {
+
+		}
+		else if (innerNode->step->new == 0 && innerNode->step->old == 1) {
+
+		}
+		else if (innerNode->step->new == 1 && innerNode->step->old == 0) {
+
+		}
+		printf("Undo %d,%d: from " + typeOfNew + " to " + typeOfOld + "\n",
+		board->movesList->tail->step->list->tail->step->j,
+		board->movesList->tail->step->list->tail->step->i,
+		board->movesList->tail->step->list->tail->step->new == 0 ? "_" : board->movesList->tail->step->new,
+		board->movesList->tail->step->list->tail->step->old == 0 ? "_" : board->movesList->tail->step->old);
+		innerNode = innerNode->prev;
+	}
+}
+
 /*todo probably need to change to Board**
  * or to add to sudoku_board.c functions that alter the matrix size*/
 int loadToBoard(FILE* fptr, Board* board) {
@@ -41,35 +78,35 @@ int loadToBoard(FILE* fptr, Board* board) {
 }
 /*TODO b add print-board when implementing "new puzzle"*/
 int resetBoard(Board* board) {
-	return 0; /*TODO resetBoard after implementing doubly linked list*/
+	return board->blockHeight; /*TODO resetBoard after implementing doubly linked list*/
 }
 
 int markAllErrors(Board* board) {
 	/*Not sure we need but maybe we will need
 	 * marks all the errors on the board*/
-	return 0;
+	return board->blockHeight;
 }
 /*note for us: deleted function named isXYErroneous because it is a duplicate of cellIsErroneous*/
-int cellIsErronous(Board* board, int x, int y) {
+int cellIsErroneous(Board* board, int x, int y) {
 	/*TODO complete is erroneous function
 	 * Called by */
-	return 0;
+	return board->blockHeight+x+y;
 }
 
 int fillXRandomCells(Board* board, int x) {
-	return 0;
+	return board->blockHeight+x;
 }
 
 int ILPSolver(Board* board) {
-	return 0;
+	return board->blockHeight;
 }
 
 int exhaustiveBackTracking(Board* board) {
-	return 0; /*returns number of solutions*/
+	return board->blockHeight; /*returns number of solutions*/
 }
 
 int eraseAllButYRandomCells(Board* board, int y) {
-	return 0;
+	return board->blockHeight+y;
 }
 
 int saveToFile(FILE* fptr,Board* board) { /*TODO in loading remember to take care of files with multiple spaces between cells*/
@@ -116,5 +153,5 @@ int saveToFile(FILE* fptr,Board* board) { /*TODO in loading remember to take car
  *
  * */
 int cellHasOnePossibleValue(Board* board,int x,int y) {
-	return 1;
+	return board->blockHeight+x+y;
 }

@@ -60,61 +60,6 @@ int print_board(Board* board) {
 	return 1;
 }
 
-int set(int x, int y, int z, Board* board, int autofill) {
-	/*available in solve, edit (1,2) mode
-	 * if x,y,z not in range error (-4)
-	 * if x,y, fixed (-5)*/
-	/*this if block should be entered only when the function is called by autofill command.
-	 * in this case the parameter autofill==1
-	 * after set with autofill print message (11)*/
-	/*TODO DLL and fix the printing in autofill IMPORTANT!!!(for DLL)in autofill mode we need to take the entire sequence of sets as one "move"*/
-	int oldval;
-	if (autofill) {
-		board->matrix[x][y] = z;
-		board->lastXSet = x;
-		board->lastYSet = y;
-		return 11;
-	}
-	/*check if x,y,z are in range*/
-	if (x<0 || y<0 || z<0 || x > board->edgeSize-1 || y > board->edgeSize-1 || z > board->edgeSize) {
-		return -4;
-	}
-	/*check if cell is fixed*/
-	if (board->isFixed[x][y] == 1) {
-		return -5;
-	}
-	oldval = board->matrix[x][y];
-	/*set the value*/
-	board->matrix[x][y] = z;
-	if (cellIsErroneous(board,x,y)) {
-		board->isErroneous[x][y] = 1;
-	}
-	/*delete all redo moves (all moves after currNode)*/
-	deleteAllNextNodes(board->movesList, board->currNode);
-
-	/*add move to the end of the list*/
-	addLast(board->movesList, x, y, oldval, z);
-
-	/*update the tail of the list*/
-	board->currNode = board->movesList->tail;
-
-	print_board(board);
-	if (board->mode == 1) { /*if we are in solve mode*/
-		if (numberOfFilledCells == board->edgeSize*board->edgeSize) { /*if board is full*/
-			validate(board);
-			if (!board->boardIsErroneous) {
-				board->mode = 0;
-				return 10;
-				/*TODO DLL in set mode when finish successfully and go to init what to do with DLL*/
-			}
-			else {
-				return 9;
-			}
-		}
-	}
-	return 666; /*shouldn't get here, somthing's wrong*/
-}
-
 int validate(Board* board) {
 	/*check if the board is erroneous, namely, it has 2 cells with same number which are neighbors
 	 * if it is erroneous - error (-6)
@@ -127,6 +72,62 @@ int validate(Board* board) {
 		return 2;
 	}
 	return -7;
+}
+
+int set(int x, int y, int z, Board* board, int autofill) {
+	/*available in solve, edit (1,2) mode
+	 * if x,y,z not in range error (-4)
+	 * if x,y, fixed (-5)*/
+	/*this if block should be entered only when the function is called by autofill command.
+	 * in this case the parameter autofill==1
+	 * after set with autofill print message (11)*/
+	/*TODO DLL and fix the printing in autofill IMPORTANT!!!(for DLL)in autofill mode we need to take the entire sequence of sets as one "move"*/
+	int oldval;
+	/*if in autofill mode the input should be valid. set the value and increment numberOfFilledCells*/
+	if (autofill) {
+		board->matrix[x][y] = z;
+		board->numberOfFilledCells++;
+		return 11;
+	}
+	/*check if x,y,z are in range*/
+	if (x<0 || y<0 || z<0 || x > board->edgeSize-1 || y > board->edgeSize-1 || z > board->edgeSize) {
+		return -4;
+	}
+	/*check if cell is fixed*/
+	if (board->isFixed[x][y] == 1) {
+		return -5;
+	}
+	oldval = board->matrix[x][y];
+	/*set the value and increment numberOfFilledCells*/
+	board->matrix[x][y] = z;
+	if (cellIsErroneous(board,x,y)) {
+		board->isErroneous[x][y] = 1;
+	}
+	board->numberOfFilledCells++;
+	/*delete all redo moves (all moves after currNode)*/
+	deleteAllNextNodes(board->movesList, board->currNode);
+
+	/*add move to the end of the list*/
+	addLast(board->movesList, x, y, oldval, z);
+
+	/*update the tail of the list*/
+	board->currNode = board->movesList->tail;
+
+	print_board(board);
+	if (board->mode == 1) { /*if we are in solve mode*/
+		if (board->numberOfFilledCells == board->edgeSize*board->edgeSize) { /*if board is full*/
+			validate(board);
+			if (!board->boardIsErroneous) {
+				board->mode = 0;
+				return 10;
+				/*TODO DLL in set mode when finish successfully and go to init what to do with DLL*/
+			}
+			else {
+				return 9;
+			}
+		}
+	}
+	return 666; /*shouldn't get here, somthing's wrong*/
 }
 
 int generate(Board* board, int x, int y) {
@@ -142,19 +143,50 @@ int generate(Board* board, int x, int y) {
 	return -10;
 }
 
-int undo(Board board) {
+int undo(Board* board) {
 	/*if no moves to undo - error (-11)*/
-	/*TODO: the undo function in game logic: implement after doubly likned list is implemented*/
-	return 1;
+	if (board->movesList->tail->prev == NULL) {
+		return -11;
+	}
+	/*else if the last command was set (and not autofill) change the values*/
+	else if (board->currNode->step->list == NULL) {
+		board->matrix[board->currNode->step->i][board->currNode->step->j] = board->currNode->step->old;
+		/*if changed value from zero to positive value increment numberOfFilledCells*/
+		if (board->currNode->step->old != 0 && board->currNode->step->new == 0) {
+			board->numberOfFilledCells++;
+		}
+		/*if changed value from positive value to zero decrement numberOfFilledCells*/
+		else if (board->currNode->step->old == 0 && board->currNode->step->new != 0) {
+			board->numberOfFilledCells--;
+		}
+	}
+	/*else the command is autofill iterate over the list of autofill sets from tail to headand undo them*/
+	else {
+		Node* innerNode = board->currNode->step->list->tail;
+		while (innerNode != NULL) {
+			board->matrix[innerNode->step->i][innerNode->step->j] = innerNode->step->old;
+			/*if changed value from zero to positive value increment numberOfFilledCells*/
+			if (board->currNode->step->old != 0 && board->currNode->step->new == 0) {
+				board->numberOfFilledCells++;
+			}
+			/*if changed value from positive value to zero decrement numberOfFilledCells*/
+			else if (board->currNode->step->old == 0 && board->currNode->step->new != 0) {
+				board->numberOfFilledCells--;
+			}
+			innerNode = innerNode->prev;
+		}
+	}
+	return 4;
+	/*TODO: undo function, maybe solve duplicated code problem*/
 }
 
-int redo(Board board) {
+int redo(Board* board) {
 	/*if no moves to redo - error (-12)*/
 	/*TODO: the redo function in game logic: implement after doubly likned list is implemented*/
-	return 1;
+	return board->blockHeight;
 }
 
-int save(Board board, char* fileName, int* mode) {
+int save(Board* board, char* fileName) {
 	/*if in edit mode there are 2 possible errors:
 	 * 1) if board is erroneous - error (-6)
 	 * 2) if it is unsolvable - error (-13)
@@ -211,7 +243,7 @@ int hint(Board* board, int x, int y) {
 	return 5;
 }
 
-int num_solutions(Board board) {
+int num_solutions(Board* board) {
 	/*check for the following errors:
 	 * 1) check if board has erroneous values - error (-6)
 	 * [now run exhaustive backtracking which should return the number of solutions]
@@ -220,54 +252,52 @@ int num_solutions(Board board) {
 		return -6;
 	}
 	board->lastNumOfSolutions = exhaustiveBackTracking(board);
-	if (board->lastNumOfSolutions == 1) {
-		return 6;
-	}
-	return 1;
+	return 6;
 }
 
-int autofill(Board* board) {
+int autofill(Board* board, int firstCall, int x, int y, int z) {
 	/*check if board has erroneous values - error (-6)*/
 	int i,j,val;
 	if (board->boardIsErroneous) {
+		if (firstCall) printf("PROBLEM: board shouldn't be erroneous in this stage"); /*TODO ZZZ for debug ZZZ*/
 		return -6;
 	}
+	/*if autofill is called by parseCommand (which means it is the first call in the autofill sequence)
+	 *then we reset the autofill fields in the board struct, and fill in the new values to these fields */
+	if (firstCall) {
+		DLL* innerList = createEmptyList();
 
-	/*fill board->autofillMatrix cells that has only one legal value with that value*/
-	for (int i=0 ; i < board->edgeSize; i++) {
-		for (int j=0 ; j < board->edgeSize ; j++) {
-			val = cellHasOnePossibleValue(board,i,j);
-			if (val > 0) {
-				board->lastAutofillMatrix[i][j] = val;
+		/*add all sets in the autofill to innerList*/
+		for (i=0 ; i < board->edgeSize; i++) {
+			for (j=0 ; j < board->edgeSize ; j++) {
+				val = cellHasOnePossibleValue(board,i,j);
+				if (val > 0) {
+					addLast(innerList,i,j,board->matrix[i][j],val);
+				}
 			}
 		}
+		/* add the list of sets as a single move.
+		 * Remark: this add is performed before all the autofill sets in list are done, but it isn't a problem
+		 * because no new moves can be done before all the autofill sets in list are done.*/
+		addLastList(board->movesList, 0, 0, 0, 0, innerList);
+		return 11;
 	}
-
-	/*call set on the values filled to board->autofillMatrix*/
-	for (int i=0 ; i < board->edgeSize; i++) {
-		for (int j=0 ; j < board->edgeSize ; j++) {
-			if (board->lastAutofillMatrix[i][j] > 0) {
-				set(i,j,board->lastAutofillMatrix[i][j],board,1);
-			}
-		}
+	else {
+		/*should always return 11*/
+		return set(x,y,z,board,1);
 	}
-
-	/*clear board->autofillMatrix to prepare it for next call to autofill*/
-	clearMatrix(board->lastAutofillMatrix, board->edgeSize);
-	print_board(board);
-	return 1;
 }
 
 int reset(Board* board) {
 	/*message (7)*/
 	/*TODO reset function: implement after implementing double linked list*/
-	return 1;
+	return board->blockHeight;
 }
 
 int exit(Board* board) {
 	/*message (8)*/
 	/*TODO exit function - free resources, implement after we are sure of all the resources in the program*/
-	return 1;
+	return board->blockHeight;
 }
 /*TODO when finishing implementing the functions update the arguments of the functions in the user interface calls functions from here*/
 /*calls the right function from game_logic*/

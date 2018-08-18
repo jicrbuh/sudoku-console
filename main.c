@@ -9,14 +9,14 @@ int main(){
 	Step* step = createStep(1,1,1,1);
 	Node* node = NULL;
 
-	addLast(list, step);
+	addLastStep(list, step);
 	step = createStep(2,2,2,2);
 
-	addLast(list, step);
+	addLastStep(list, step);
 	printList(list);
 
 	step = createStep(3,3,3,3);
-	addFirst(list,step);
+	addFirstListStep(list,step);
 	printList(list);
 
 
@@ -25,6 +25,7 @@ int main(){
 	printList(list);
 
 	freeList(list);
+	return 1;
 
 
 

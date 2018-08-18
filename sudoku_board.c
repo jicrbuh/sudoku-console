@@ -3,10 +3,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+void copyMatrix(int** orig, int** new, int size){
+	int i,j;
+	for(i = 0; i < size; i++){
+		for(j = 0; j < size; j++){
+			new[i][j] = orig[i][j];
+		}
+	}
+}
+
 Board* createBoard(int blockHeight, int blockLength) {
-	Board board = (Board *) calloc(sizeof(Board));
 	int** mtx = NULL;
 	int boardSize = blockHeight*blockLength;
+	Board* board = (Board *) calloc(boardSize,sizeof(Board));
 	int i;
 
 	if (board == NULL) {
@@ -34,7 +43,7 @@ Board* copyBoard(Board* board){
 	if (copied == NULL) {
 		return NULL; /*if allocation failed, returns NULL*/
 	}
-	copyMatrix(board,copied,board->edgeSize);
+	copyMatrix(board->matrix,copied->matrix,board->edgeSize);
 	return copied;
 }
 void destroyBoard(Board* board){
@@ -45,8 +54,6 @@ void destroyBoard(Board* board){
 	}
 
 	free(board->matrix);
-	free(board->blockHeight); /*maybe can't free those because they aren't pointers?*/
-	free(board->blockLength);
 	free(board);
 }
 void printBoard(Board* board){
@@ -59,7 +66,7 @@ void printBoard(Board* board){
 
 void printCell(Board* board, int i, int j) {
 	if (board->mode == 0) {
-
+		printf("just to compile %d%d%d",board->blockHeight,i,j);
 	}
 
 }
@@ -104,14 +111,7 @@ int numberOfBlankCells(Board* board) {
 	return board->edgeSize*board->edgeSize - numberOfFilledCells(board);
 }
 
-void copyMatrix(int** orig, int** new, int size){
-	int i,j;
-	for(i = 0; i < size; i++){
-		for(j = 0; j < size; j++){
-			new[i][j] = orig[i][j];
-		}
-	}
-}
+
 /* Input:
  * A square matrix and its edge size
  *
