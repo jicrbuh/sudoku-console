@@ -5,45 +5,118 @@
 #include "sudoku_board.h"
 #include "doubly_linked_list.h"
 
-void printSetUndo(Board* board) {
-	if (board->movesList->tail->step->new == 0 && board->movesList->tail->step->old == 0) {
-		printf("Undo %d,%d: from %s to %s\n", board->movesList->tail->step->j,
-				board->movesList->tail->step->i, "_", "_");
-	}
-	else if (board->movesList->tail->step->new == 0 && board->movesList->tail->step->old != 0) {
-		printf("Undo %d,%d: from %s to %d\n", board->movesList->tail->step->j,
-				board->movesList->tail->step->i, "_", board->movesList->tail->step->old);
-	}
-	else if (board->movesList->tail->step->new != 0 && board->movesList->tail->step->old == 0) {
-		printf("Undo %d,%d: from %d to %s\n", board->movesList->tail->step->j,
-				board->movesList->tail->step->i, board->movesList->tail->step->new, "_");
+/*undo == 1 if last command was undo
+ *undo == 0 if last command was redo*/
+void printSetUndo(Board* board, int undo) {
+	Node* revertedNode;
+	if (undo) {
+		revertedNode = board->currNode->next;
 	}
 	else {
-		printf("Undo %d,%d: from %d to %d\n", board->movesList->tail->step->j,
-				board->movesList->tail->step->i, board->movesList->tail->step->new, board->movesList->tail->step->old);
+		revertedNode = board->currNode;
+	}
+	if (revertedNode->step->new == 0 && revertedNode->step->old == 0) {
+		if (undo) {
+			printf("Undo %d,%d: from %s to %s\n", revertedNode->step->j,
+							revertedNode->step->i, "_", "_");
+		}
+		else {
+			printf("Redo %d,%d: from %s to %s\n", revertedNode->step->j,
+							revertedNode->step->i, "_", "_");
+		}
+
+	}
+	else if (revertedNode->step->new == 0 && revertedNode->step->old != 0) {
+		if (undo) {
+			printf("Undo %d,%d: from %s to %d\n", revertedNode->step->j,
+							revertedNode->step->i, "_", revertedNode->step->old);
+		}
+		else {
+			printf("Redo %d,%d: from %s to %d\n", revertedNode->step->j,
+							revertedNode->step->i, "_", revertedNode->step->old);
+		}
+	}
+	else if (revertedNode->step->new != 0 && revertedNode->step->old == 0) {
+		if (undo) {
+			printf("Undo %d,%d: from %d to %s\n", revertedNode->step->j,
+							revertedNode->step->i, revertedNode->step->new, "_");
+		}
+		else {
+			printf("Redo %d,%d: from %d to %s\n", revertedNode->step->j,
+							revertedNode->step->i, revertedNode->step->new, "_");
+		}
+
+	}
+	else {
+		if (undo) {
+			printf("Undo %d,%d: from %d to %d\n", revertedNode->step->j,
+							revertedNode->step->i, revertedNode->step->new, revertedNode->step->old);
+		}
+		else {
+			printf("Redo %d,%d: from %d to %d\n", revertedNode->step->j,
+							revertedNode->step->i, revertedNode->step->new, revertedNode->step->old);
+		}
 	}
 }
 
-void printAutofillUndo(Board* board) {
-	Node* innerNode = board->movesList->tail->step->list->tail;
+/*undo == 1 if last command was undo
+ *undo == 0 if last command was redo*/
+void printAutofillUndo(Board* board, int undo) {
+	Node* innerNode;
+	if (undo) {
+		innerNode = board->currNode->next->step->list->tail;
+	}
+	else {
+		innerNode = board->currNode->step->list->head;
+	}
 	while (innerNode != NULL) {
 		if (innerNode->step->new == 0 && innerNode->step->old == 0) {
-			printf("Undo %d,%d: from %s to %s\n", innerNode->step->j,
-					innerNode->step->i, "_", "_");
+			if (undo) {
+				printf("Undo %d,%d: from %s to %s\n", innerNode->step->j,
+									innerNode->step->i, "_", "_");
+			}
+			else {
+				printf("Redo %d,%d: from %s to %s\n", innerNode->step->j,
+									innerNode->step->i, "_", "_");
+			}
 		}
 		else if (innerNode->step->new == 0 && innerNode->step->old != 0) {
-			printf("Undo %d,%d: from %s to %d\n", innerNode->step->j,
-					innerNode->step->i, "_", innerNode->step->old);
+			if (undo) {
+				printf("Undo %d,%d: from %s to %d\n", innerNode->step->j,
+						innerNode->step->i, "_", innerNode->step->old);
+			}
+			else {
+				printf("Redo %d,%d: from %s to %d\n", innerNode->step->j,
+						innerNode->step->i, "_", innerNode->step->old);
+			}
 		}
 		else if (innerNode->step->new != 0 && innerNode->step->old == 0) {
-			printf("Undo %d,%d: from %d to %s\n", innerNode->step->j,
-					innerNode->step->i, innerNode->step->new, "_");
+			if (undo) {
+				printf("Undo %d,%d: from %d to %s\n", innerNode->step->j,
+						innerNode->step->i, innerNode->step->new, "_");
+			}
+			else {
+				printf("Redo %d,%d: from %d to %s\n", innerNode->step->j,
+						innerNode->step->i, innerNode->step->new, "_");
+			}
+
 		}
 		else {
-			printf("Undo %d,%d: from %d to %d\n", innerNode->step->j,
-					innerNode->step->i, innerNode->step->new, innerNode->step->old);
+			if (undo) {
+				printf("Undo %d,%d: from %d to %d\n", innerNode->step->j,
+						innerNode->step->i, innerNode->step->new, innerNode->step->old);
+			}
+			else {
+				printf("Redo %d,%d: from %d to %d\n", innerNode->step->j,
+						innerNode->step->i, innerNode->step->new, innerNode->step->old);
+			}
 		}
-		innerNode = innerNode->prev;
+		if (undo) {
+			innerNode = innerNode->prev;
+		}
+		else {
+			innerNode = innerNode->next;
+		}
 	}
 }
 

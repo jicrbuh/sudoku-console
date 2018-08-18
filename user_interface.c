@@ -144,18 +144,21 @@ int read_print_error(Board* board){ /*TODO read_print_error erased hint paramete
 			break;
 		case (4):
 			/*check if the last move was set (and not autofill)*/
-			if (board->movesList->head->step->list == NULL) {
-				printSetUndo(board);
+			if (board->currNode->next->step->list == NULL) {
+				printSetUndo(board, 1);
 			}
 			else {
-				printAutofillUndo(board);
+				printAutofillUndo(board, 1);
 			}
-			board->currNode = board->currNode->prev;
-			break;
-			printf("Undo %d,%d: from %d to %d\n",0,0,0,0); /*change the d values according to linked list TODO after DLL add values to message*/
 			break;
 		case (3):
-			printf("Redo %d,%d: from %d to %d\n",0,0,0,0); /*change the d values according to linked list TODO after DLL add values to message*/
+			/*check if the last undo was set (and not autofill)*/
+			if (board->currNode->next->step->list == NULL) {
+				printSetUndo(board, 0);
+			}
+			else {
+				printAutofillUndo(board, 0);
+			}
 			break;
 		case (2):
 			printf("Validation passed: board is solvable\n");

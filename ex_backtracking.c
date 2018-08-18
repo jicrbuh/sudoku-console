@@ -54,21 +54,62 @@ int isBlockErr(Board* board, int x, int y){
 	return 0;
 }
 
+void initStack(Board* board, DLL* stack) {
+	int i,j;
+	for (i=0 ; i<board->edgeSize ; i++) {
+		for (j=0 ; j<board->edgeSize ; j++) {
+			if (board->matrix[i][j] == 0) {
+				addLast(stack,i,j,0,0);
+			}
+		}
+	}
+}
+
+/* returns -1 if no possible value for cell i,j
+ * otherwise returns the smallest value possible for the cell.*/
+int solveCell(Board* board, int x, int y) {
+	int i = board->matrix[x][y] + 1;
+	while (i<board->edgeSize+1) {
+		board->matrix[x][y] = i;
+		if (isCellErr(board,x,y)) {
+			i++;
+		}
+		else {
+			return i;
+		}
+	}
+	board->matrix[x][y] = 0;
+	return -1;
+}
+
 int exBackTracking(Board* board){
 	Board* boardCopy = NULL;
+	Node* currNode = NULL;
 	DLL* stack = createEmptyList();
 	int solutionsNum = 0;
-
-
 	boardCopy = copyBoard(board);
 	if (boardCopy == NULL) { /* if board allocation failed, return -999*/
 		return -999;
 	}
-	fixAll(boardCopy); /* all filled cells in board are marked as fixed in copyBoard*/
-
-	addFirst(stack, 0,0, boardCopy->matrix[0][0],boardCopy->matrix[0][0]); /*adds the first node*/
-
-
-
-	return 666;
+	initStack(boardCopy,stack);
+	currNode = stack->head;
+	while (currNode != NULL) {
+		/*if cell couldn't be filled*/
+		if (solveCell(copyBoard, currNode->step->i, currNode->step->j) == -1) {
+			currNode = currNode->prev;
+		}
+		/*if cell filled successfully*/
+		else {
+			/*if currNode is the last node*/
+			if (currNode == stack->tail) {
+				solutionsNum++;
+			}
+			else {
+				currNode = currNode->next;
+			}
+		}
+	}
+	freeList(stack);
+	freeBoard(copyBoard);
+	return solutionsNum;
 }

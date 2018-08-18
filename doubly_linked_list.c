@@ -174,6 +174,15 @@ void addFirstListStep(DLL* list, Step *step) {
 		node->prev = NULL;
 	}
 }
+void clearList(DLL* list) {
+	Node* currNode = list->tail;
+	while (currNode != NULL) {
+		free(currNode);
+		currNode = currNode->prev;
+	}
+	list->tail = NULL;
+	list->head = NULL;
+}
 
 void addFirst(DLL* list, int i, int j, int old, int new) {
 	addFirstList(list, i, j, old, new, NULL);

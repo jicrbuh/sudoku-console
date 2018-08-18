@@ -24,7 +24,7 @@ Board* createBoard(int blockHeight, int blockLength) {
 	board->blockHeight=blockHeight;
 	board->blockLength=blockLength;
 	board->edgeSize=boardSize;
-	/*TODO b(in createBoard) when the board struct is final, add all missing fields here*/
+
 	/*allocate memory for the board's matrix*/
 	mtx = calloc(boardSize, sizeof(int*));
 	if (mtx == NULL) {
@@ -71,7 +71,7 @@ void fixAll(Board* board) {
 
 /*not sure if needed!*/
 Board* deepCopy(Board* board) {
-	returns NULL;
+	return NULL;
 
 }
 
@@ -85,6 +85,7 @@ void destroyBoard(Board* board){
 	free(board->matrix);
 	free(board);
 }
+
 void printBoard(Board* board){
 /*board is NxN
  * n-by-m blocks (n rows of blocks, m columns of blocks)

@@ -86,7 +86,6 @@ int set(int x, int y, int z, Board* board, int autofill) {
 	/*if in autofill mode the input should be valid. set the value and increment numberOfFilledCells*/
 	if (autofill) {
 		board->matrix[x][y] = z;
-		board->numberOfFilledCells++;
 		return 11;
 	}
 	/*check if x,y,z are in range*/
@@ -98,12 +97,11 @@ int set(int x, int y, int z, Board* board, int autofill) {
 		return -5;
 	}
 	oldval = board->matrix[x][y];
-	/*set the value and increment numberOfFilledCells*/
+	/*set the value*/
 	board->matrix[x][y] = z;
-	if (cellIsErroneous(board,x,y)) {
+	if (isCellErr(board,x,y)) {
 		board->isErroneous[x][y] = 1;
 	}
-	board->numberOfFilledCells++;
 	/*delete all redo moves (all moves after currNode)*/
 	deleteAllNextNodes(board->movesList, board->currNode);
 
@@ -115,7 +113,7 @@ int set(int x, int y, int z, Board* board, int autofill) {
 
 	print_board(board);
 	if (board->mode == 1) { /*if we are in solve mode*/
-		if (board->numberOfFilledCells == board->edgeSize*board->edgeSize) { /*if board is full*/
+		if (numberOfFilledCells(board) == board->edgeSize*board->edgeSize) { /*if board is full*/
 			validate(board);
 			if (!board->boardIsErroneous) {
 				board->mode = 0;
@@ -145,45 +143,51 @@ int generate(Board* board, int x, int y) {
 
 int undo(Board* board) {
 	/*if no moves to undo - error (-11)*/
-	if (board->movesList->tail->prev == NULL) {
+	if (board->currNode == NULL) {
 		return -11;
 	}
 	/*else if the last command was set (and not autofill) change the values*/
 	else if (board->currNode->step->list == NULL) {
 		board->matrix[board->currNode->step->i][board->currNode->step->j] = board->currNode->step->old;
-		/*if changed value from zero to positive value increment numberOfFilledCells*/
-		if (board->currNode->step->old != 0 && board->currNode->step->new == 0) {
-			board->numberOfFilledCells++;
-		}
-		/*if changed value from positive value to zero decrement numberOfFilledCells*/
-		else if (board->currNode->step->old == 0 && board->currNode->step->new != 0) {
-			board->numberOfFilledCells--;
-		}
 	}
 	/*else the command is autofill iterate over the list of autofill sets from tail to headand undo them*/
 	else {
 		Node* innerNode = board->currNode->step->list->tail;
 		while (innerNode != NULL) {
 			board->matrix[innerNode->step->i][innerNode->step->j] = innerNode->step->old;
-			/*if changed value from zero to positive value increment numberOfFilledCells*/
-			if (board->currNode->step->old != 0 && board->currNode->step->new == 0) {
-				board->numberOfFilledCells++;
-			}
-			/*if changed value from positive value to zero decrement numberOfFilledCells*/
-			else if (board->currNode->step->old == 0 && board->currNode->step->new != 0) {
-				board->numberOfFilledCells--;
-			}
 			innerNode = innerNode->prev;
 		}
 	}
+	/*move currNode one step backwards*/
+	board->currNode = board->currNode->prev;
 	return 4;
-	/*TODO: undo function, maybe solve duplicated code problem*/
 }
 
 int redo(Board* board) {
 	/*if no moves to redo - error (-12)*/
-	/*TODO: the redo function in game logic: implement after doubly likned list is implemented*/
-	return board->blockHeight;
+	if (board->currNode->next == NULL || (board->currNode == NULL && board->movesList->head == NULL)) {
+		return -12;
+	}
+	/*currNode is updated to be the node it should be when exiting the function*/
+	else if (board->currNode == NULL && board->movesList->head != NULL) {
+		board->currNode = board->movesList->head;
+	}
+	else {
+		board->currNode = board->currNode->next;
+	}
+	/*else if the last undo was set (and not autofill) change the value*/
+	if (board->currNode->step->list == NULL) {
+		board->matrix[board->currNode->step->i][board->currNode->step->j] = board->currNode->step->new;
+	}
+	/*else the command is autofill iterate over the list of autofill sets from tail to headand undo them*/
+	else {
+		Node* innerNode = board->currNode->step->list->head;
+		while (innerNode != NULL) {
+			board->matrix[innerNode->step->i][innerNode->step->j] = innerNode->step->new;
+			innerNode = innerNode->next;
+		}
+	}
+	return 4;
 }
 
 int save(Board* board, char* fileName) {
@@ -289,9 +293,11 @@ int autofill(Board* board, int firstCall, int x, int y, int z) {
 }
 
 int reset(Board* board) {
-	/*message (7)*/
-	/*TODO reset function: implement after implementing double linked list*/
-	return board->blockHeight;
+	while (board->currNode != NULL) {
+		undo(board);
+	}
+	clearList(board->movesList);
+	return 7;
 }
 
 int exit(Board* board) {

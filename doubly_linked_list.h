@@ -213,6 +213,9 @@ void printList(DLL* list);
  * calls printStep(step) for all the nodes' steps in list from last to first */
 void printListFromTail(DLL* list);
 
+
+void clearList(DLL* list);
+
 /* Input:
  * a doubly linked list
  *

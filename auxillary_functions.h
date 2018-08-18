@@ -18,7 +18,7 @@ int resetBoard(Board* board);
 
 int markAllErrors(Board* board);
 
-int cellIsErronous(Board* board, int x, int y);
+int cellIsErroneous(Board* board, int x, int y);
 
 int fillXRandomCells(Board* board, int x);
 

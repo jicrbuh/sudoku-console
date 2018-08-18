@@ -32,9 +32,6 @@ typedef struct board_t {
 	/* last hint given */
 	int lastHint;
 
-	/* the number of filled cells in the sudoku board*/
-	int numberOfFilledCells;
-
 	/* the matrix that represents the sudoku board*/
 	int** matrix;
 
@@ -61,9 +58,19 @@ typedef struct board_t {
  * */
 Board* createBoard(int block_height, int block_length);
 Board* copyBoard(Board* board);
+Board* deepCopy(Board* board);
 void destroyBoard(Board* board);
 void printBoard(Board* board);
 void clearBoard(Board* board);
 void resizeMatrices(Board* board);
+int numberOfBlankCells(Board* board);
+int numberOfFilledCells(Board* board);
+
+void printSeparatorRow(int n, int N);
+void printCellRow(Board* board, int rowIdx);
+void printCell(Board* board, int i, int j);
+void fixAll(Board* board);
+void copyMatrix(int** orig, int** new, int size);
+
 
 #endif /* SUDOKU_BOARD_H_ */
