@@ -174,6 +174,13 @@ int cellIsErroneous(Board* board, int x, int y) {
 }
 
 int fillXRandomCells(Board* board, int x) {
+	int i, row, col, val;
+	for (i=0 ; i<x ; i++) {
+		int row = rand() % (board->edgeSize);
+		int col = rand() % (board->edgeSize);
+		int val = rand() % (board->edgeSize);
+		board->matrix[row][col] = val;
+	}
 	return board->blockHeight+x;
 }
 

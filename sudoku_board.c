@@ -89,35 +89,63 @@ void destroyBoard(Board* board){
 void printBoard(Board* board){
 /*board is NxN
  * n-by-m blocks (n rows of blocks, m columns of blocks)
- * board printing format has N+n+1 rows*/
-	printSeparatorRow(board->blockHeight,board->edgeSize);
-	printCellRow(board, 1);
+ * board printing format has N+m+1 rows*/
+	int i,j;
+	printSeperatorRow(board);
+	for (i=0 ; i<board->blockLength ; i++) {
+		for (j=0 ; j<board->blockHeight ; j++) {
+			printRow(board,j);
+		}
+		printSeperatorRow(board);
+	}
 }
 
 void printCell(Board* board, int i, int j) {
-	if (board->mode == 0) {
-		printf("just to compile %d%d%d",board->blockHeight,i,j);
+	if (board->matrix[i][j] == 0) {
+		printf("   ");
 	}
-
+	else {
+		printf(" %2d", board->matrix[i][j]);
+	}
+	if (board->isFixed[i][j]) {
+		printf(".");
+	}
+	else if (board->mode == 2 || board->markErrors == 1) {
+		if (cellIsErr(board,i,j)) {
+			printf("*");
+		}
+		else {
+			printf(" ");
+		}
+	}
 }
 
-void printCellRow(Board* board, int rowIdx) {
+int isBoardErr(Board* board) {
+	int i,j;
+	for (i=0 ; i<board->edgeSize ; i++) {
+		for (j=0 ; j<board->edgeSize ; j++) {
+			if (isCellErr(board,i,j)) {
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+void printRow(Board* board, int rowIdx) {
 	int i;
 	printf("|");
 	for (i=0; i < board->edgeSize; i++) {
-		printf("%2d",board->matrix[rowIdx][i]);
+		printCell(board,rowIdx,i);
 		if ((i+1)%board->blockLength == 0) {
 			printf("|");
 		}
 	}
 	printf("\n");
-
 }
 
-void printSeparatorRow(int n, int N) {
+void printSeparatorRow(Board* board) {
 	int i;
-
-	for (i=0; i < (4*N + n +1); i++) {
+	for (i=0; i < (4*board->edgeSize + board->blockHeight +1); i++) {
 		printf("-");
 	}
 	printf("\n");

@@ -54,12 +54,14 @@ int isBlockErr(Board* board, int x, int y){
 	return 0;
 }
 
+/**/
 void initStack(Board* board, DLL* stack) {
 	int i,j;
-	for (i=0 ; i<board->edgeSize ; i++) {
-		for (j=0 ; j<board->edgeSize ; j++) {
+	for (i=board->edgeSize ; i>0 ; i--) {
+		for (j=board->edgeSize ; j>0 ; j--) {
 			if (board->matrix[i][j] == 0) {
-				addLast(stack,i,j,0,0);
+				/*push*/
+				addFirst(stack,i,j,0,0);
 			}
 		}
 	}
@@ -88,22 +90,25 @@ int exBackTracking(Board* board){
 	DLL* stack = createEmptyList();
 	int solutionsNum = 0;
 	boardCopy = copyBoard(board);
-	if (boardCopy == NULL) { /* if board allocation failed, return -999*/
+	/* if board allocation failed, return -999*/
+	if (boardCopy == NULL) {
 		return -999;
 	}
 	initStack(boardCopy,stack);
 	currNode = stack->head;
+	/*while stack isn't empty*/
 	while (currNode != NULL) {
-		/*if cell couldn't be filled*/
+		/*if cell couldn't be filled - backtrack to previous cell*/
 		if (solveCell(copyBoard, currNode->step->i, currNode->step->j) == -1) {
 			currNode = currNode->prev;
 		}
 		/*if cell filled successfully*/
 		else {
-			/*if currNode is the last node*/
+			/*if currNode is the last node then the board is successfuly filled hence increment solutionsNum*/
 			if (currNode == stack->tail) {
 				solutionsNum++;
 			}
+			/*if there are more cells to fill go to the next one*/
 			else {
 				currNode = currNode->next;
 			}
