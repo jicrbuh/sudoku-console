@@ -1,36 +1,74 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "auxillary_functions.h"
 #include "doubly_linked_list.h"
-#include <time.h>
+#include "game_logic.h"
+#include "user_interface.h"
+#include "sudoku_board.h"
 
-int main(){
-	srand(time(NULL));
-/*
-	DLL* list = createEmptyList();
-	Step* step = createStep(1,1,1,1);
-	Node* node = NULL;
+int test_load(Board* board, char* path) {
+	FILE* fptr = NULL;
+	fptr = fopen(path, 'r');
+	if (fptr == NULL) {
+		printf("couldn't open file to read\n");
+		return 999;
+	}
 
-	addLastStep(list, step);
-	step = createStep(2,2,2,2);
+	loadToBoard(board, fptr);
+	printBoard(board);
+	fclose(fptr);
+	return 0;
+	}
 
-	addLastStep(list, step);
-	printList(list);
+int test_load_err(Board* board, char* path, int x, int y) {
+	FILE* fptr = NULL;
+	fptr = fopen(path, 'r');
+	int isErr = 0;
+	if (fptr == NULL) {
+		printf("ERROR:couldn't open file %s for reading\n", path);
+		return 999;
+	}
 
-	step = createStep(3,3,3,3);
-	addFirstListStep(list,step);
-	printList(list);
+	loadToBoard(board, fptr);
+	printBoard(board);
+	isErr = isCellErr(board,x,y);
+	if (isErr) {
+		printf("success: %d,%d is err\n", x, y);
+	}
+	else {
+		printf("ERROR: %d,%d suppose to be erroneous but isCellErr == 0\n", x, y);
+	}
+	fclose(fptr);
+	return 0;
+	}
+
+int main() {
+
+	Board* board = createBoard(9,9);
+	char* path1 = "C:\Users\chen\Documents\SW_project\hw\sudoku-console\tests\load1.txt";
+	char* path2 = "C:\Users\chen\Documents\SW_project\hw\sudoku-console\tests\load2.txt";
+	char* path3 = "C:\Users\chen\Documents\SW_project\hw\sudoku-console\tests\load3.txt";
+	char* err00 = "C:\Users\chen\Documents\SW_project\hw\sudoku-console\tests\err_0_0.txt";
+	char* err01 = "C:\Users\chen\Documents\SW_project\hw\sudoku-console\tests\err_0_1.txt";
 
 
-	node = list->head;
-	deleteAllNextNodes(list, node);
-	printList(list);
+	printf("test_load for load1\n");
+	test_load(board, path1);
 
-	freeList(list);
-	return 1;
-*/
+	printf("test_load for load2\n");
+	test_load(board, path2);
 
+	printf("test_load for load3\n");
+	test_load(board, path3);
 
+	printf("test_load_err for err_0_0\n");
+	test_load_err(board, err00, 0,0);
 
+	printf("test_load_err for err_0_1\n");
+	test_load_err(board, err00, 0,1);
 
+	destroyBoard(board);
+
+	return 0;
 }
