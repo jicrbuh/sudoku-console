@@ -45,12 +45,11 @@ int edit(char* fileName, Board* board) {
 }
 
 int mark_errors(int x, Board* board) {
-	/*available in solve (1) mode*/
-	/*x is 0 or 1!*/
+	/*verify that x is 1 or 0, else return error value*/
 	if (x != 0 && x != 1) {
 		return -3;
 	}
-	board->mode = x;
+	board->markErrors = x;
 	return 1;
 }
 
@@ -65,7 +64,7 @@ int validate(Board* board) {
 	 * if it is erroneous - error (-6)
 	 * if it is unsolvable - error(-7)
 	 * else, it is valid - message(2) */
-	if (board->boardIsErroneous) {
+	if (isBoardErr(board)) {
 		return -6;
 	}
 	if (1==1) { /*check with ILP if the board is solvable (if it is, go in the if statement)*/
@@ -74,20 +73,11 @@ int validate(Board* board) {
 	return -7;
 }
 
-int set(int x, int y, int z, Board* board, int autofill) {
+int set(int x, int y, int z, Board* board) {
 	/*available in solve, edit (1,2) mode
 	 * if x,y,z not in range error (-4)
 	 * if x,y, fixed (-5)*/
-	/*this if block should be entered only when the function is called by autofill command.
-	 * in this case the parameter autofill==1
-	 * after set with autofill print message (11)*/
-	/*TODO DLL and fix the printing in autofill IMPORTANT!!!(for DLL)in autofill mode we need to take the entire sequence of sets as one "move"*/
 	int oldval;
-	/*if in autofill mode the input should be valid. set the value and increment numberOfFilledCells*/
-	if (autofill) {
-		board->matrix[x][y] = z;
-		return 11;
-	}
 	/*check if x,y,z are in range*/
 	if (x<0 || y<0 || z<0 || x > board->edgeSize-1 || y > board->edgeSize-1 || z > board->edgeSize) {
 		return -4;
@@ -99,9 +89,6 @@ int set(int x, int y, int z, Board* board, int autofill) {
 	oldval = board->matrix[x][y];
 	/*set the value*/
 	board->matrix[x][y] = z;
-	if (isCellErr(board,x,y)) {
-		board->isErroneous[x][y] = 1;
-	}
 	/*delete all redo moves (all moves after currNode)*/
 	deleteAllNextNodes(board->movesList, board->currNode);
 
@@ -114,11 +101,10 @@ int set(int x, int y, int z, Board* board, int autofill) {
 	print_board(board);
 	if (board->mode == 1) { /*if we are in solve mode*/
 		if (numberOfFilledCells(board) == board->edgeSize*board->edgeSize) { /*if board is full*/
-			validate(board);
-			if (!board->boardIsErroneous) {
+			if (!boardIsErr(board)) {
 				board->mode = 0;
+				clearList(board->movesList);
 				return 10;
-				/*TODO DLL in set mode when finish successfully and go to init what to do with DLL*/
 			}
 			else {
 				return 9;
@@ -133,10 +119,12 @@ int generate(Board* board, int x, int y) {
 	int errorCounter = 0;
 	while (errorCounter < 1000) {
 		clearBoard(board);
-		if (fillXRandomCells(board,x) && ILPSolver(board)){
+		fillXRandomCells(board,x);
+		if (ILPSolver(board)){
 			eraseAllButYRandomCells(board,y);
 			return 1;
 		}
+		errorCounter++;
 	}
 	return -10;
 }
@@ -202,7 +190,7 @@ int save(Board* board, char* fileName) {
 	fptr = fopen(fileName, "w");
 
 	if (board->mode == 2) {
-		if (board->boardIsErroneous) {
+		if (isBoardErr(board)) {
 			return -6;
 		}
 		if (!validate(board)) {
@@ -231,7 +219,7 @@ int hint(Board* board, int x, int y) {
 	if (x<0 || y<0 || x > board->edgeSize-1 || y > board->edgeSize-1) {
 		return -4;
 	}
-	if (board->boardIsErroneous) {
+	if (isBoardErr(board)) {
 		return -6;
 	}
 	if (board->isFixed[x][y]) {
@@ -252,7 +240,7 @@ int num_solutions(Board* board) {
 	 * 1) check if board has erroneous values - error (-6)
 	 * [now run exhaustive backtracking which should return the number of solutions]
 	 * if no error - message (6) + the value*/
-	if (board->boardIsErroneous) {
+	if (isBoardErr(board)) {
 		return -6;
 	}
 	board->lastNumOfSolutions = exhaustiveBackTracking(board);
@@ -262,8 +250,8 @@ int num_solutions(Board* board) {
 int autofill(Board* board, int firstCall, int x, int y, int z) {
 	/*check if board has erroneous values - error (-6)*/
 	int i,j,val;
-	if (board->boardIsErroneous) {
-		if (firstCall) printf("PROBLEM: board shouldn't be erroneous in this stage"); /*TODO ZZZ for debug ZZZ*/
+	if (isBoardErr(board)) {
+		if (!firstCall) printf("PROBLEM: board shouldn't be erroneous in this stage"); /*TODO ZZZ for debug ZZZ*/
 		return -6;
 	}
 	/*if autofill is called by parseCommand (which means it is the first call in the autofill sequence)
@@ -287,8 +275,8 @@ int autofill(Board* board, int firstCall, int x, int y, int z) {
 		return 11;
 	}
 	else {
-		/*should always return 11*/
-		return set(x,y,z,board,1);
+		board->matrix[x][y] = z;
+		return 11;
 	}
 }
 

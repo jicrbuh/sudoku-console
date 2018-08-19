@@ -23,9 +23,6 @@ typedef struct board_t {
 	/* 1 - errors are marked, 0 - errors are not marked*/
 	int markErrors;
 
-	/* 1 - there is at least one erroneous value, 0 - no erroneous values*/
-	int boardIsErroneous;
-
 	/* the number of solutions to the board according to the last call to num_solutions command*/
 	int lastNumOfSolutions;
 
@@ -34,10 +31,6 @@ typedef struct board_t {
 
 	/* the matrix that represents the sudoku board*/
 	int** matrix;
-
-	/* a matrix with the dimensions of the board which contains is each cell:
-	 * 1 - if the cell is erroneous, 0 - otherwise*/
-	int** isErroneous;
 
 	/* a matrix with the dimensions of the board which contains is each cell:
 	 * 1 - if the cell is fixed, 0 - otherwise*/
@@ -51,7 +44,7 @@ typedef struct board_t {
 
 } Board;
 
-/*TODO documentation update for sudoku_board.h
+/* TODO documentation update for sudoku_board.h
  * creates an empty Board with block_height and block_length.
  * the board is initialized to '0'
  * returns a pointer to the board, or NULL if memory allocation failed

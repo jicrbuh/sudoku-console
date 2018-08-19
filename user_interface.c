@@ -45,7 +45,7 @@ int parseCommand(char *userInput, Board board){
 		if (endptr1 == NULL || endptr2 == NULL || firstArgumentAsInt > numberOfEmptyCells(board)) return -8;
 		/*asked in the forum if need to check y is a valid int (same we did for x). in the instructions they say only for x but
 		 * we think its a mistake and should be checked for y's value also*/
-		if (numberOfCellsFilled(board) == 0) return -9;
+		if (numberOfCellsFilled(board) != 0) return -9;
 		return generate(board,firstArgumentAsInt,secondArgumentAsInt);
 	}
 	else if (strcmp(command,"undo")) {
@@ -92,7 +92,7 @@ int read_command(int mode){
 	return mode;
 }
 
-int read_print_error(Board* board){ /*TODO read_print_error erased hint parameter cuz not in use. if there is a problem with it remember this*/
+int read_print_error(Board* board){
 	Node* autofillCurrNode;
 	char userInput[COMMAND_LENGTH]  = {0};
 	/*prints 'please enter a command'*/

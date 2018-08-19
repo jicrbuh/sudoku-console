@@ -11,30 +11,48 @@ void copyMatrix(int** orig, int** new, int size){
 		}
 	}
 }
+/*if boardMatrix = 1 it initializes board->matrix
+ *else, it initializes board->isFixed */
+int initMatrix(Board* board, int boardMatrix) {
+	int i;
+	int** matrix = NULL;
+	/*allocate memory for the board's matrix*/
+	matrix = calloc(board->edgeSize, sizeof(int*));
+	if (matrix == NULL) {
+		return 999; /*if allocation failed, returns NULL*/
+	}
+	for(i=0 ;i < board->edgeSize; i++) {
+		matrix[i] = calloc(board->edgeSize, sizeof(int));
+	}
+	if (boardMatrix) {
+		board->matrix = matrix;
+	}
+	else {
+		board->isFixed = matrix;
+	}
+}
 
 Board* createBoard(int blockHeight, int blockLength) {
-	int** mtx = NULL;
+	int allocationError1, allocationError2;
 	int boardSize = blockHeight*blockLength;
 	Board* board = (Board *) calloc(boardSize,sizeof(Board));
-	int i;
 
 	if (board == NULL) {
 		return NULL; /*if allocation failed, returns NULL*/
 	}
+	/*TODO When writing main function decide if to do markErrors = 1 in createBoard or independently in main function
+	 * or keep it here in createBoard */
+	board->markErrors = 1;
 	board->blockHeight=blockHeight;
 	board->blockLength=blockLength;
 	board->edgeSize=boardSize;
-
-	/*allocate memory for the board's matrix*/
-	mtx = calloc(boardSize, sizeof(int*));
-	if (mtx == NULL) {
-		return NULL; /*if allocation failed, returns NULL*/
+	/*initializes board->matrix*/
+	allocationError1 = initMatrix(board,1);
+	/*initializes board->isFixed*/
+	allocationError2 = initMatrix(board,0);
+	if (allocationError1 == 999 || allocationError2 == 999) {
+		return NULL;
 	}
-	for(i = 0;i < boardSize; i++) {
-		mtx[i] = calloc(boardSize, sizeof(int));
-	}
-	board->matrix=mtx;
-
 	return board;
 }
 
@@ -46,34 +64,12 @@ Board* copyBoard(Board* board){
 	if (copied == NULL) {
 		return NULL; /*if allocation failed, returns NULL*/
 	}
-
-	copied->boardIsErroneous = board->boardIsErroneous;
-
 	copyMatrix(board->matrix,copied->matrix,board->edgeSize);
 	copyMatrix(board->isFixed, copied->isFixed, board->edgeSize);
 
 	return copied;
 }
 
-/*changed all cells to fixed (if cell isn't empty)*/
-void fixAll(Board* board) {
-	int i,j;
-
-	for (i=0; i<board->edgeSize; i++) {
-		for (j=0; j<board->edgeSize; j++) {
-			if (board->matrix[i][j] != 0) {
-				board->isFixed[i][j] = 1;
-			}
-		}
-	}
-
-}
-
-/*not sure if needed!*/
-Board* deepCopy(Board* board) {
-	return NULL;
-
-}
 
 void destroyBoard(Board* board){
 	int i;
@@ -179,7 +175,6 @@ int numberOfBlankCells(Board* board) {
  * Description:
  * Sets all the values of matrix to 0*/
 
-/*TODO b(clearMatrix) make sure the pointers stuff are OK and fix*/
 void clearMatrix(int** matrix, int edgeSize) {
 	int i,j;
 	for (i=0 ; i<edgeSize ; i++) {
