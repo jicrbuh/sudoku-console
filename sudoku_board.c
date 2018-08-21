@@ -2,6 +2,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "auxillary_functions.h"
+
+void printRow(Board* board, int rowIdx) {
+	int i;
+	printf("|");
+	for (i=0; i < board->edgeSize; i++) {
+		printCell(board,rowIdx,i);
+		if ((i+1)%board->blockLength == 0) {
+			printf("|");
+		}
+	}
+	printf("\n");
+}
+
+void printSeparatorRow(Board* board) {
+	int i;
+	for (i=0; i < (4*board->edgeSize + board->blockHeight +1); i++) {
+		printf("-");
+	}
+	printf("\n");
+}
+
+void printBoard(Board* board){
+/*board is NxN
+ * n-by-m blocks (n rows of blocks, m columns of blocks)
+ * board printing format has N+m+1 rows*/
+	int i,j;
+	printSeperatorRow(board);
+	for (i=0 ; i<board->blockLength ; i++) {
+		for (j=0 ; j<board->blockHeight ; j++) {
+			printRow(board,j);
+		}
+		printSeperatorRow(board);
+	}
+}
 
 void copyMatrix(int** orig, int** new, int size){
 	int i,j;
@@ -30,6 +65,7 @@ int initMatrix(Board* board, int boardMatrix) {
 	else {
 		board->isFixed = matrix;
 	}
+	return 1;
 }
 
 Board* createBoard(int blockHeight, int blockLength) {
@@ -82,19 +118,7 @@ void destroyBoard(Board* board){
 	free(board);
 }
 
-void printBoard(Board* board){
-/*board is NxN
- * n-by-m blocks (n rows of blocks, m columns of blocks)
- * board printing format has N+m+1 rows*/
-	int i,j;
-	printSeperatorRow(board);
-	for (i=0 ; i<board->blockLength ; i++) {
-		for (j=0 ; j<board->blockHeight ; j++) {
-			printRow(board,j);
-		}
-		printSeperatorRow(board);
-	}
-}
+
 
 void printCell(Board* board, int i, int j) {
 	if (board->matrix[i][j] == 0) {
@@ -107,7 +131,7 @@ void printCell(Board* board, int i, int j) {
 		printf(".");
 	}
 	else if (board->mode == 2 || board->markErrors == 1) {
-		if (cellIsErr(board,i,j)) {
+		if (isCellErr(board,i,j)) {
 			printf("*");
 		}
 		else {
@@ -127,25 +151,7 @@ int isBoardErr(Board* board) {
 	}
 	return 0;
 }
-void printRow(Board* board, int rowIdx) {
-	int i;
-	printf("|");
-	for (i=0; i < board->edgeSize; i++) {
-		printCell(board,rowIdx,i);
-		if ((i+1)%board->blockLength == 0) {
-			printf("|");
-		}
-	}
-	printf("\n");
-}
 
-void printSeparatorRow(Board* board) {
-	int i;
-	for (i=0; i < (4*board->edgeSize + board->blockHeight +1); i++) {
-		printf("-");
-	}
-	printf("\n");
-}
 
 int numberOfFilledCells(Board* board) {
 /*returns the number of filled cells*/

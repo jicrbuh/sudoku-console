@@ -7,6 +7,8 @@
 
 #ifndef AUXILLARY_FUNCTIONS_H_
 #define AUXILLARY_FUNCTIONS_H_
+#include "sudoku_board.h"
+
 
 /*
  *

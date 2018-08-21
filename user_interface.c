@@ -45,7 +45,7 @@ int parseCommand(char *userInput, Board board){
 		if (endptr1 == NULL || endptr2 == NULL || firstArgumentAsInt > numberOfEmptyCells(board)) return -8;
 		/*asked in the forum if need to check y is a valid int (same we did for x). in the instructions they say only for x but
 		 * we think its a mistake and should be checked for y's value also*/
-		if (numberOfCellsFilled(board) != 0) return -9;
+		if (numberOfFilledCells(board) != 0) return -9;
 		return generate(board,firstArgumentAsInt,secondArgumentAsInt);
 	}
 	else if (strcmp(command,"undo")) {

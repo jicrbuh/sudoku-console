@@ -37,14 +37,6 @@ typedef struct DLL {
  * Empty doubly linked list */
 DLL* createEmptyList();
 
-/*
- * Input:
- * i,j - coordinates of the cell in the board, i for row, j - for column.
- * new - matrix[i][j] current value, old - matrix[i][j] as was before added the new value.
- *
- * Output:
- * a pointer to the step described above */
-Step* createStep (int i, int j, int old, int new);
 
 /*
  * Input:
@@ -54,32 +46,15 @@ Step* createStep (int i, int j, int old, int new);
  *
  * Output:
  * a pointer to the step described above */
-Step* createListStep (int i, int j, int old, int new, DLL* list);
+Step* createStep (int i, int j, int old, int new, DLL* list);
 
 /* Input:
  * a Step
  *
  * Output:
  * Node* that points to Step */
-Node* createNodeByStep(Step *step);
+Node* createNode(Step *step);
 
-/*
- * Input:
- * i,j - coordinates of the cell in the board, i for row, j - for column.
- * new - matrix[i][j] current value, old - matrix[i][j] as was before added the new value.
- *
- * Output:
- * Node that points to createStep(i, j, old, new, list) */
-Node* createListNode(int i, int j, int old, int new, DLL* list);
-
-/*
- * Input:
- * i,j - coordinates of the cell in the board, i for row, j - for column.
- * new - matrix[i][j] current value, old - matrix[i][j] as was before added the new value.
- *
- * Output:
- * Node that points to createStep(i, j, old, new) */
-Node* createNode(int i, int j, int old, int new);
 
 /* Input:
  * pointer to a doubly linked list, step - pointer to a step to be added as the content of a new last node
@@ -89,32 +64,7 @@ Node* createNode(int i, int j, int old, int new);
  *
  * Description:
  * adds a node to the end of list*/
-void addLastStep(DLL* list, Step *step);
-
-/* Input:
- * pointer to a doubly linked list,
- * i,j - coordinates of the cell in the board, i for row, j - for column that
- * new - matrix[i][j] current value, old - matrix[i][j] as was before added the new value.
- *
- * Output:
- * None
- *
- * Description:
- * adds a node to the end of list*/
-void addLast(DLL* list, int i, int j, int old, int new);
-
-/* Input:
- * list - pointer to a doubly linked list,
- * i,j - coordinates of the cell in the board, i for row, j - for column that
- * new - matrix[i][j] current value, old - matrix[i][j] as was before added the new value.
- * innerList - pointer to inner doubly linked list.
- *
- * Output:
- * None
- *
- * Description:
- * adds a node to the end of list*/
-void addLastList(DLL* list, int i, int j, int old, int new, DLL* innerList);
+void addLast(DLL* list, Node* node);
 
 /* Input:
  * pointer to a doubly linked list, step - pointer to a step to be added as the content of a new last node
@@ -124,32 +74,7 @@ void addLastList(DLL* list, int i, int j, int old, int new, DLL* innerList);
  *
  * Description:
  * adds a node to the beginning of list*/
-void addFirstListStep (DLL* list, Step *step);
-
-/* Input:
- * pointer to a doubly linked list,
- * i,j - coordinates of the cell in the board, i for row, j - for column that
- * new - matrix[i][j] current value, old - matrix[i][j] as was before added the new value.
- *
- * Output:
- * None
- *
- * Description:
- * adds a node to the beginning of list*/
-void addFirst(DLL* list, int i, int j, int old, int new);
-
-/* Input:
- * list - pointer to a doubly linked list.
- * i,j - coordinates of the cell in the board, i for row, j - for column that
- * new - matrix[i][j] current value, old - matrix[i][j] as was before added the new value.
- * innerList - pointer to inner doubly linked list
- *
- * Output:
- * None
- *
- * Description:
- * adds a node to the beginning of list*/
-void addFirstList(DLL* list, int i, int j, int old, int new, DLL* innerList);
+void addFirst (DLL* list, Node* node);
 
 /* Input:
  * Doubly linked list
@@ -190,7 +115,9 @@ void deleteAllNextNodes(DLL* list, Node* node);
  *
  * Description:
  * prints step in the following format:
- * "(i,j): old -> new\n"*/
+ * "(i,j): old -> new\n"
+ *
+ * Remark: for debug perpuses only */
 void printStep(Step* step);
 
 /* Input:
@@ -226,24 +153,5 @@ void clearList(DLL* list);
  * frees all resources used by the list */
 void freeList (DLL* list);
 
-/* Input:
- * node - a list to be printed
- *
- * Output:
- * None
- *
- * Description:
- * frees all resources used by the node */
-void freeNode(Node* node);
-
-/* Input:
- * node - a list to be printed
- *
- * Output:
- * None
- *
- * Description:
- * frees all resources used by the step */
-void freeStep(Step* step);
 
 #endif /* DOUBLY_LINKED_LIST_H_*/

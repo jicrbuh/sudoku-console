@@ -93,7 +93,7 @@ int set(int x, int y, int z, Board* board) {
 	deleteAllNextNodes(board->movesList, board->currNode);
 
 	/*add move to the end of the list*/
-	addLast(board->movesList, x, y, oldval, z);
+	addLast(board->movesList, createNode(createStep(x,y,oldval,z,NULL)));
 
 	/*update the tail of the list*/
 	board->currNode = board->movesList->tail;
@@ -264,14 +264,14 @@ int autofill(Board* board, int firstCall, int x, int y, int z) {
 			for (j=0 ; j < board->edgeSize ; j++) {
 				val = cellHasOnePossibleValue(board,i,j);
 				if (val > 0) {
-					addLast(innerList,i,j,board->matrix[i][j],val);
+					addLast(innerList,createNode(createStep(i,j,board->matrix[i][j],val,NULL)));
 				}
 			}
 		}
 		/* add the list of sets as a single move.
 		 * Remark: this add is performed before all the autofill sets in list are done, but it isn't a problem
 		 * because no new moves can be done before all the autofill sets in list are done.*/
-		addLastList(board->movesList, 0, 0, 0, 0, innerList);
+		addLast(board->movesList, createNode(createStep(0,0,0,0,innerList)));
 		return 11;
 	}
 	else {
@@ -296,8 +296,7 @@ int exit(Board* board) {
 /*TODO when finishing implementing the functions update the arguments of the functions in the user interface calls functions from here*/
 /*calls the right function from game_logic*/
 /*prints errors for specific functions*/
-/*switch case for printing different errors, starting from -1*/
-/*all input can has more parameters than needed and be ok*/
+/*switch case for printing different errors, starting from -1*/ /*all input can has more parameters than needed and be ok*/
 
 /*solve(x) - x is not empty
  * error (-1) "Error: File doesn't exist or cannot be opened\n"*/

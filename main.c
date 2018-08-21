@@ -7,7 +7,7 @@
 #include "user_interface.h"
 #include "sudoku_board.h"
 
-int test_load(Board* board, char* path) {
+/*int test_load(Board* board, char* path) {
 	FILE* fptr = NULL;
 	fptr = fopen(path, 'r');
 	if (fptr == NULL) {
@@ -41,11 +41,11 @@ int test_load_err(Board* board, char* path, int x, int y) {
 	}
 	fclose(fptr);
 	return 0;
-	}
+	}*/
 
 int main() {
 
-	Board* board = createBoard(9,9);
+	/*Board* board = createBoard(9,9);
 	char* path1 = "C:\Users\chen\Documents\SW_project\hw\sudoku-console\tests\load1.txt";
 	char* path2 = "C:\Users\chen\Documents\SW_project\hw\sudoku-console\tests\load2.txt";
 	char* path3 = "C:\Users\chen\Documents\SW_project\hw\sudoku-console\tests\load3.txt";
@@ -68,7 +68,7 @@ int main() {
 	printf("test_load_err for err_0_1\n");
 	test_load_err(board, err00, 0,1);
 
-	destroyBoard(board);
+	destroyBoard(board);*/
 
 	return 0;
 }

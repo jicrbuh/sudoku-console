@@ -6,9 +6,6 @@
 #include "doubly_linked_list.h"
 
 
-/*back tracking stuff*/
-
-
 int isRowErr(Board* board, int x, int y){
 	/*returns 1 if erroneous(relatively to row) or 0 else*/
 	int i;
@@ -67,7 +64,7 @@ void initStack(Board* board, DLL* stack) {
 		for (j=board->edgeSize ; j>0 ; j--) {
 			if (board->matrix[i][j] == 0) {
 				/*push*/
-				addFirst(stack,i,j,0,0);
+				addFirst(stack,createNode(createStep(i,j,0,0,NULL)));
 			}
 		}
 	}
@@ -130,7 +127,7 @@ int exBackTracking(Board* board){
 	return solutionsNum;
 }
 
-/*end of backtracking stuff*/
+
 /*undo == 1 if last command was undo
  *undo == 0 if last command was redo*/
 void printSetUndo(Board* board, int undo) { /*TODO AUX DOC*/
@@ -383,7 +380,7 @@ int cellHasOnePossibleValue(Board* board, int x, int y) { /*TODO AUX DOC*/
 	for (i=1 ; i<board->edgeSize+1 ; i++) {
 		/*check if value i is valid*/
 		board->matrix[x][y] = i;
-		valIsValid = !cellIsErr(board,x,y);
+		valIsValid = !isCellErr(board,x,y);
 		board->matrix[x][y] = 0;
 		/*if it is valid and is the first solution found, save it to val
 		 * if it is valid and it's a second solution return -1 (more than one solution)

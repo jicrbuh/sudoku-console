@@ -59,7 +59,7 @@ void resizeMatrices(Board* board);
 int numberOfBlankCells(Board* board);
 int numberOfFilledCells(Board* board);
 
-void printSeparatorRow(int n, int N);
+void printSeparatorRow(Board* board);
 void printCellRow(Board* board, int rowIdx);
 void printCell(Board* board, int i, int j);
 void fixAll(Board* board);
