@@ -7,30 +7,31 @@
 #include "user_interface.h"
 #include "sudoku_board.h"
 
-/*int test_load(Board* board, char* path) {
+int test_load(Board* board, char* path) {
 	FILE* fptr = NULL;
-	fptr = fopen(path, 'r');
+	fptr = fopen(path, "r");
 	if (fptr == NULL) {
 		printf("couldn't open file to read\n");
 		return 999;
 	}
 
-	loadToBoard(board, fptr);
+	loadToBoard(fptr, board);
 	printBoard(board);
 	fclose(fptr);
 	return 0;
 	}
 
 int test_load_err(Board* board, char* path, int x, int y) {
-	FILE* fptr = NULL;
-	fptr = fopen(path, 'r');
 	int isErr = 0;
+	FILE* fptr = NULL;
+	fptr = fopen(path, "r");
+
 	if (fptr == NULL) {
 		printf("ERROR:couldn't open file %s for reading\n", path);
 		return 999;
 	}
 
-	loadToBoard(board, fptr);
+	loadToBoard(fptr, board);
 	printBoard(board);
 	isErr = isCellErr(board,x,y);
 	if (isErr) {
@@ -41,16 +42,16 @@ int test_load_err(Board* board, char* path, int x, int y) {
 	}
 	fclose(fptr);
 	return 0;
-	}*/
+	}
 
 int main() {
 
-	/*Board* board = createBoard(9,9);
-	char* path1 = "C:\Users\chen\Documents\SW_project\hw\sudoku-console\tests\load1.txt";
-	char* path2 = "C:\Users\chen\Documents\SW_project\hw\sudoku-console\tests\load2.txt";
-	char* path3 = "C:\Users\chen\Documents\SW_project\hw\sudoku-console\tests\load3.txt";
-	char* err00 = "C:\Users\chen\Documents\SW_project\hw\sudoku-console\tests\err_0_0.txt";
-	char* err01 = "C:\Users\chen\Documents\SW_project\hw\sudoku-console\tests\err_0_1.txt";
+	Board* board = createBoard(9,9);
+	char* path1 = "tests\\load1.txt";
+	char* path2 = "tests\\load2.txt";
+	char* path3 = "tests\\load3.txt";
+	char* err00 = "tests\\err_0_0.txt";
+	char* err01 = "tests\\err_0_1.txt";
 
 
 	printf("test_load for load1\n");
@@ -66,9 +67,9 @@ int main() {
 	test_load_err(board, err00, 0,0);
 
 	printf("test_load_err for err_0_1\n");
-	test_load_err(board, err00, 0,1);
+	test_load_err(board, err01, 0,1);
 
-	destroyBoard(board);*/
+	destroyBoard(board);
 
 	return 0;
 }
