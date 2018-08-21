@@ -46,17 +46,18 @@ int test_load_err(Board* board, char* path, int x, int y) {
 
 int main() {
 
-	/*
+
 	char* path1 = "tests\\load1.txt";
 	char* path2 = "tests\\load2.txt";
 	char* path3 = "tests\\load3.txt";
-	char* err00 = "tests\\err_0_0.txt";
+	char* not_err = "tests\\not_err.txt";
+	/*char* err00 = "tests\\err_0_0.txt";
 	char* err01 = "tests\\err_0_1.txt";*/
 	Board* board = createBoard(3,3);
 
 
 	printf("test_load for load1\n");
-	/*test_load(board, path1);
+	test_load(board, path1);
 
 	printf("test_load for load2\n");
 	test_load(board, path2);
@@ -64,7 +65,10 @@ int main() {
 	printf("test_load for load3\n");
 	test_load(board, path3);
 
-	printf("test_load_err for err_0_0\n");
+	printf("test_load for not_err\n");
+		test_load(board, not_err);
+
+	/*printf("test_load_err for err_0_0\n");
 	test_load_err(board, err00, 0,0);
 
 	printf("test_load_err for err_0_1\n");

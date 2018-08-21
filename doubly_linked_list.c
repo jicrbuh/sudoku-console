@@ -69,7 +69,10 @@ void freeStep(Step* step) {
 }
 
 void freeNode(Node* node) {
-	freeStep(node->step);
+	if (node != NULL) {
+		freeStep(node->step);
+	}
+
 	free(node);
 }
 
