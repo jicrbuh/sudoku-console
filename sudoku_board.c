@@ -90,11 +90,16 @@ int initMatrix(Board* board, int boardMatrix) {
 		matrix[i] = calloc(board->edgeSize, sizeof(int));
 	}
 	if (boardMatrix) {
-		freeMatrix(board,1);
+		if(board->matrix != NULL) {
+			freeMatrix(board,1);
+		}
+
 		board->matrix = matrix;
 	}
 	else {
-		freeMatrix(board,0);
+		if(board->isFixed != NULL) {
+			freeMatrix(board,0);
+		}
 		board->isFixed = matrix;
 	}
 	return 1;
