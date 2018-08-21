@@ -43,7 +43,7 @@ void printBoard(Board* board){
 	printSeperatorRow(board);
 	for (i=0 ; i<board->blockLength ; i++) {
 		for (j=0 ; j<board->blockHeight ; j++) {
-			printRow(board,j);
+			printRow(board,i*board->blockHeight+j);
 		}
 		printSeperatorRow(board);
 	}

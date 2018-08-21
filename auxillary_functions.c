@@ -6,11 +6,11 @@
 #include "doubly_linked_list.h"
 
 
-int isRowErr(Board* board, int x, int y){
+int isColErr(Board* board, int x, int y){
 	/*returns 1 if erroneous(relatively to row) or 0 else*/
 	int i;
 	for(i=0;i < board->edgeSize; i++) {
-		if (board->matrix[x][i] == board->matrix[x][y]) {
+		if (board->matrix[x][i] == board->matrix[x][y] && i != y) {
 			return 1;
 		}
 	}
@@ -18,11 +18,11 @@ int isRowErr(Board* board, int x, int y){
 }
 
 
-int isColErr(Board* board, int x, int y){
+int isRowErr(Board* board, int x, int y){
 	/*returns 1 if erroneous (relatively to column) or 0 else*/
 	int i;
 		for(i=0;i < board->edgeSize; i++) {
-			if (board->matrix[i][y] == board->matrix[x][y]) {
+			if (board->matrix[i][y] == board->matrix[x][y] && i != x) {
 				return 1;
 			}
 		}
@@ -38,7 +38,7 @@ int isBlockErr(Board* board, int x, int y){
 
 	for (i=0;i < board->blockLength; i++) {
 		for (j=0; j< board->blockHeight ; j++) {
-			if (board->matrix[x][y] == board->matrix[iStart+i][jStart+j]) {
+			if (board->matrix[x][y] == board->matrix[iStart+i][jStart+j] && x != (iStart+i) && y != (jStart+j)) {
 				return 1;
 			}
 		}
@@ -48,6 +48,9 @@ int isBlockErr(Board* board, int x, int y){
 
 int isCellErr(Board* board, int x, int y) {
 	/*returns 1 if erroneous or 0 else*/
+	if (board->matrix[x][y] == 0) {
+		return 0;
+	}
 	if (isRowErr(board,x,y) || isColErr(board,x,y) || isBlockErr(board,x,y)) {
 		return 1;
 	}
