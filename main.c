@@ -35,7 +35,7 @@ int test_load_err(Board* board, char* path, int x, int y) {
 	printBoard(board);
 	isErr = isCellErr(board,x,y);
 	if (isErr) {
-		printf("success: %d,%d is err\n", x, y);
+		printf("succebss: %d,%d is err\n", x, y);
 	}
 	else {
 		printf("ERROR: %d,%d suppose to be erroneous but isCellErr == 0\n", x, y);
@@ -46,16 +46,17 @@ int test_load_err(Board* board, char* path, int x, int y) {
 
 int main() {
 
-	Board* board = createBoard(9,9);
+	/*
 	char* path1 = "tests\\load1.txt";
 	char* path2 = "tests\\load2.txt";
 	char* path3 = "tests\\load3.txt";
 	char* err00 = "tests\\err_0_0.txt";
-	char* err01 = "tests\\err_0_1.txt";
+	char* err01 = "tests\\err_0_1.txt";*/
+	Board* board = createBoard(3,3);
 
 
 	printf("test_load for load1\n");
-	test_load(board, path1);
+	/*test_load(board, path1);
 
 	printf("test_load for load2\n");
 	test_load(board, path2);
@@ -67,7 +68,7 @@ int main() {
 	test_load_err(board, err00, 0,0);
 
 	printf("test_load_err for err_0_1\n");
-	test_load_err(board, err01, 0,1);
+	test_load_err(board, err01, 0,1);*/
 
 	destroyBoard(board);
 
