@@ -6,6 +6,7 @@
 #include "game_logic.h"
 #include "user_interface.h"
 #include "sudoku_board.h"
+#include "SPBufferset.h"
 
 int test_load(Board* board, char* path) {
 	FILE* fptr = NULL;
