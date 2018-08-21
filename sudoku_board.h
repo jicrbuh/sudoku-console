@@ -58,12 +58,14 @@ void clearBoard(Board* board);
 void resizeMatrices(Board* board);
 int numberOfBlankCells(Board* board);
 int numberOfFilledCells(Board* board);
-
+int initMatrix(Board* board, int boardMatrix);
 void printSeparatorRow(Board* board);
 void printCellRow(Board* board, int rowIdx);
 void printCell(Board* board, int i, int j);
 void fixAll(Board* board);
 void copyMatrix(int** orig, int** new, int size);
-
+int isBoardErr(Board* board);
+void initAsDefaultBoard(Board* board);
+void clearMatrix(int** matrix, int edgeSize);
 
 #endif /* SUDOKU_BOARD_H_ */

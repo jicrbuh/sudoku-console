@@ -107,7 +107,7 @@ int exBackTracking(Board* board){
 	/*while stack isn't empty*/
 	while (currNode != NULL) {
 		/*if cell couldn't be filled - backtrack to previous cell*/
-		if (solveCell(copyBoard, currNode->step->i, currNode->step->j) == -1) {
+		if (solveCell(boardCopy, currNode->step->i, currNode->step->j) == -1) {
 			currNode = currNode->prev;
 		}
 		/*if cell filled successfully*/
@@ -123,7 +123,7 @@ int exBackTracking(Board* board){
 		}
 	}
 	freeList(stack);
-	freeBoard(copyBoard);
+	destroyBoard(boardCopy);
 	return solutionsNum;
 }
 
@@ -247,8 +247,7 @@ void loadToBoard(FILE* fptr, Board* board) { /*TODO AUX DOC*/
 
 	/*implement by the instructions in "files format"*/
 
-	int intFromFile,i,j, inputRead, val;
-	char* endptr, expression;
+	int intFromFile,i,j, inputRead;
 	char mychar;
 
 
@@ -322,7 +321,7 @@ void eraseAllButYRandomCells(Board* board, int y) { /*TODO AUX DOC*/
 		row = rand() % (board->edgeSize);
 		col = rand() % (board->edgeSize);
 		if (board->matrix[row][col] != 0) {
-			board[row][col] = 0;
+			board->matrix[row][col] = 0;
 			cnt++;
 		}
 	}
@@ -336,18 +335,18 @@ int saveToFile(FILE* fptr,Board* board) { /*TODO AUX DOC*/
 		for (j=0 ; j<board->edgeSize ; j++) {
 			if (j == board->edgeSize-1) {
 				if (board->mode == 2) {
-					fprintf(fptr,"%d.\n",board[i][j]);
+					fprintf(fptr,"%d.\n",board->matrix[i][j]);
 				}
 				else {
-					fprintf(fptr,"%d\n",board[i][j]);
+					fprintf(fptr,"%d\n",board->matrix[i][j]);
 				}
 			}
 			else {
 				if (board->mode == 2) {
-					fprintf(fptr,"%d. ",board[i][j]);
+					fprintf(fptr,"%d. ",board->matrix[i][j]);
 				}
 				else {
-					fprintf(fptr,"%d ",board[i][j]);
+					fprintf(fptr,"%d ",board->matrix[i][j]);
 				}
 			}
 		}

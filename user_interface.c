@@ -8,8 +8,9 @@
 #define COMMAND_LENGTH 257
 /*parses user commands and calls the functions from game_logic (maybe)*/
 /*take strcmp at the beginning once, check if it's possible*/
-int parseCommand(char *userInput, Board board){
-	char *endptr1, *endptr2, *endptr3, *firstArgument, *firstArgumentAsInt, *secondArgumentAsInt, *thirdArgumentAsInt, *command;
+int parseCommand(char *userInput, Board* board){
+	char *endptr1, *endptr2, *endptr3, *firstArgument, *command;
+	int firstArgumentAsInt, secondArgumentAsInt, thirdArgumentAsInt, retVal;
 	command = strtok(userInput," \t\r\n");
 	firstArgument = strtok(NULL," \t\r\n");
 	firstArgumentAsInt = (int)strtol(strtok(NULL," \t\r\n"),&endptr1,10);
@@ -17,15 +18,15 @@ int parseCommand(char *userInput, Board board){
 	thirdArgumentAsInt = (int)strtol(strtok(NULL," \t\r\n"),&endptr3,10);
 	if (strcmp(userInput,"solve") == 0) {
 		if (firstArgument == NULL) return 0; /*check validity of argument: argument is not NULL*/
-		return solve(firstArgument, board->mode); /*if we got here argument is valid, call the command's function*/
+		return solve(firstArgument, board); /*if we got here argument is valid, call the command's function*/
 	}
 	else if (strcmp(command,"edit") == 0) {
-		return edit(firstArgument, board->mode); /*no need to check validity, if NULL then solve knows its with 0 argument*/
+		return edit(firstArgument, board); /*no need to check validity, if NULL then solve knows its with 0 argument*/
 	}
 	else if (strcmp(command,"mark_errors")) {
 		if (board->mode != 1) return 0;
-		if (*endptr1 == NULL) return -3; /*check validity: check if argument is zero (atoi function problem)*/
-		else return mark_errors(firstArgumentAsInt); /*mark errors will check if it is 0/1 or not*/
+		if (endptr1 == NULL) return -3; /*check validity: check if argument is zero (atoi function problem)*/
+		else return mark_errors(firstArgumentAsInt, board); /*mark errors will check if it is 0/1 or not*/
 	}
 	else if (strcmp(command,"print_board")) {
 		if (board->mode == 0) return 0; /*not allowed in init mode*/
@@ -34,7 +35,7 @@ int parseCommand(char *userInput, Board board){
 	else if (strcmp(command, "set")) {
 		if (board->mode == 0) return 0; /*not allowed in init mode*/
 		if (endptr1 == NULL || endptr2 == NULL || endptr3 == NULL) return -4; /*verify that all arguments are integers*/
-		return set(secondArgumentAsInt-1,firstArgumentAsInt-1,thirdArgumentAsInt,0); /*set will check if the arguments are in range*/
+		return set(secondArgumentAsInt-1,firstArgumentAsInt-1,thirdArgumentAsInt,board); /*set will check if the arguments are in range*/
 	}
 	else if (strcmp(command,"validate"	)) {
 		if (board->mode == 0) return 0; /*not allowed in init mode*/
@@ -42,7 +43,7 @@ int parseCommand(char *userInput, Board board){
 	}
 	else if (strcmp(command,"generate")) {
 		if (board->mode != 2) return 0; /*only allowed in edit mode*/
-		if (endptr1 == NULL || endptr2 == NULL || firstArgumentAsInt > numberOfEmptyCells(board)) return -8;
+		if (endptr1 == NULL || endptr2 == NULL || firstArgumentAsInt > numberOfBlankCells(board)) return -8;
 		/*asked in the forum if need to check y is a valid int (same we did for x). in the instructions they say only for x but
 		 * we think its a mistake and should be checked for y's value also*/
 		if (numberOfFilledCells(board) != 0) return -9;
@@ -58,7 +59,7 @@ int parseCommand(char *userInput, Board board){
 	}
 	else if (strcmp(command,"save")) {
 		if (board->mode == 0) return 0; /*not allowed in init mode*/
-		int retVal = save(board,firstArgument);
+		retVal = save(board,firstArgument);
 		if (retVal==1) printf("Save to: %s\n", firstArgument);
 		return retVal;
 	}
@@ -73,14 +74,14 @@ int parseCommand(char *userInput, Board board){
 	}
 	else if (strcmp(command, "autofill")) {
 		if (board->mode != 1) return 0; /*only allowed in solve mode*/
-		return autofill(board,1,0,0);
+		return autofill(board,1,0,0,0);
 	}
 	else if (strcmp(command, "reset")) {
 		if (board->mode == 0) return 0; /*not allowed in init mode*/
 		return reset(board);
 	}
 	else if (strcmp(command, "exit")) {
-		return exit(); /*available in all modes*/
+		return userExit(board); /*available in all modes*/
 	}
 
 	return 1;
@@ -188,7 +189,7 @@ int read_print_error(Board* board){
 			printf("Validation failed: board is unsolvable\n");
 			break;
 		case (-8):
-			printf("Error: value not in range 0-%d\n",numberOfEmptyCells(board));
+			printf("Error: value not in range 0-%d\n",numberOfBlankCells(board));
 			break;
 		case (-9):
 			printf("Error: board is not empty\n"); /*in the instructions file (in generate) there is a probably mistaken extra space */
@@ -212,8 +213,6 @@ int read_print_error(Board* board){
 			printf("Error: board is unsolvable\n");
 			break;
 	}
-	/**/
-	free(userInput);
 	return 1;
 }
 

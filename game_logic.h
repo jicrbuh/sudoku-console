@@ -25,7 +25,7 @@ int hint(Board* board, int x, int y);
 int num_solutions(Board* board);
 int autofill(Board* board, int firstCall, int x, int y, int z);
 int reset(Board* board);
-int exit(Board* board);
+int userExit(Board* board);
 
 
 #endif /* GAME_LOGIC_H_ */

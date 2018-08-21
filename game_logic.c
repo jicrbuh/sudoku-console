@@ -31,7 +31,7 @@ int edit(char* fileName, Board* board) {
 
 	FILE* file = NULL;
 	if (fileName == NULL) {
-		resetBoard(board);
+		initAsDefaultBoard(board);
 		board->mode = 2;
 		return 1;
 	}
@@ -101,7 +101,7 @@ int set(int x, int y, int z, Board* board) {
 	print_board(board);
 	if (board->mode == 1) { /*if we are in solve mode*/
 		if (numberOfFilledCells(board) == board->edgeSize*board->edgeSize) { /*if board is full*/
-			if (!boardIsErr(board)) {
+			if (!isBoardErr(board)) {
 				board->mode = 0;
 				clearList(board->movesList);
 				return 10;
@@ -118,7 +118,7 @@ int generate(Board* board, int x, int y) {
 	/*if 1000 iterations fail - error (-10)*/
 	int errorCounter = 0;
 	while (errorCounter < 1000) {
-		clearBoard(board);
+		clearMatrix(board->matrix,board->edgeSize);
 		fillXRandomCells(board,x);
 		if (ILPSolver(board)){
 			eraseAllButYRandomCells(board,y);
@@ -243,7 +243,7 @@ int num_solutions(Board* board) {
 	if (isBoardErr(board)) {
 		return -6;
 	}
-	board->lastNumOfSolutions = exhaustiveBackTracking(board);
+	board->lastNumOfSolutions = exBackTracking(board);
 	return 6;
 }
 
@@ -288,7 +288,7 @@ int reset(Board* board) {
 	return 7;
 }
 
-int exit(Board* board) {
+int userExit(Board* board) {
 	/*message (8)*/
 	/*TODO exit function - free resources, implement after we are sure of all the resources in the program*/
 	return board->blockHeight;

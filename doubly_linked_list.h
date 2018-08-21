@@ -141,7 +141,7 @@ void printList(DLL* list);
 void printListFromTail(DLL* list);
 
 
-void clearList(DLL* list);
+void clearList(DLL* list);/*TODO DOC*/
 
 /* Input:
  * a doubly linked list
@@ -152,6 +152,8 @@ void clearList(DLL* list);
  * Description:
  * frees all resources used by the list */
 void freeList (DLL* list);
+
+void freeNode(Node* node); /*TODO DOC*/
 
 
 #endif /* DOUBLY_LINKED_LIST_H_*/

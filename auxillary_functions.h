@@ -71,4 +71,23 @@ int exBackTracking(Board* board);
  * */
 void loadToBoard(FILE* fptr, Board* board);
 
+
+
+
+void printSetUndo(Board* board, int undo);
+
+void printAutofillUndo(Board* board, int undo);
+
+void loadToBoard(FILE* fptr, Board* board);
+
+void fillXRandomCells(Board* board, int x);
+
+int ILPSolver(Board* board);
+
+void eraseAllButYRandomCells(Board* board, int y);
+
+int saveToFile(FILE* fptr,Board* board);
+
+int cellHasOnePossibleValue(Board* board, int x, int y);
+
 #endif /* AUXILLARY_FUNCTIONS_H_ */

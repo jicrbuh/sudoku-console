@@ -3,7 +3,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include "auxillary_functions.h"
+#include "doubly_linked_list.h"
 
+void initAsDefaultBoard(Board* board) {
+	board->blockHeight = 3;
+	board->blockLength = 3;
+	board->edgeSize = 9;
+	initMatrix(board, 0);
+	initMatrix(board, 1);
+	board->markErrors = 1;
+	clearList(board->movesList);
+	board->currNode = NULL;
+}
 void printRow(Board* board, int rowIdx) {
 	int i;
 	printf("|");
@@ -16,7 +27,7 @@ void printRow(Board* board, int rowIdx) {
 	printf("\n");
 }
 
-void printSeparatorRow(Board* board) {
+void printSeperatorRow(Board* board) {
 	int i;
 	for (i=0; i < (4*board->edgeSize + board->blockHeight +1); i++) {
 		printf("-");
@@ -48,6 +59,25 @@ void copyMatrix(int** orig, int** new, int size){
 }
 /*if boardMatrix = 1 it initializes board->matrix
  *else, it initializes board->isFixed */
+void freeMatrix(Board* board, int boardMatrix) {
+	int i;
+	for (i=0 ; i<board->edgeSize ; i++) {
+		if (boardMatrix) {
+			free(board->matrix[i]);
+		}
+		else {
+			free(board->isFixed[i]);
+		}
+	}
+	if (boardMatrix) {
+		free(board->matrix);
+	}
+	else {
+		free(board->isFixed);
+	}
+}
+/*if boardMatrix = 1 it initializes board->matrix
+ *else, it initializes board->isFixed */
 int initMatrix(Board* board, int boardMatrix) {
 	int i;
 	int** matrix = NULL;
@@ -60,9 +90,11 @@ int initMatrix(Board* board, int boardMatrix) {
 		matrix[i] = calloc(board->edgeSize, sizeof(int));
 	}
 	if (boardMatrix) {
+		freeMatrix(board,1);
 		board->matrix = matrix;
 	}
 	else {
+		freeMatrix(board,0);
 		board->isFixed = matrix;
 	}
 	return 1;
@@ -82,6 +114,7 @@ Board* createBoard(int blockHeight, int blockLength) {
 	board->blockHeight=blockHeight;
 	board->blockLength=blockLength;
 	board->edgeSize=boardSize;
+	board->movesList = createEmptyList();
 	/*initializes board->matrix*/
 	allocationError1 = initMatrix(board,1);
 	/*initializes board->isFixed*/
@@ -108,13 +141,10 @@ Board* copyBoard(Board* board){
 
 
 void destroyBoard(Board* board){
-	int i;
-	/*frees the matrix*/
-	for(i=0; i < board->edgeSize; i++ ) {
-	    free(board->matrix[i]);
-	}
-
-	free(board->matrix);
+	freeMatrix(board,1);
+	freeMatrix(board,0);
+	freeList(board->movesList);
+	freeNode(board->currNode);
 	free(board);
 }
 
