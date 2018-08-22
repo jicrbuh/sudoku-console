@@ -247,12 +247,9 @@ void printAutofillUndo(Board* board, int undo) { /*TODO AUX DOC*/
 } /*TODO fix auxillary function file typo (auxiliary or smth)*/
 
 void loadToBoard(FILE* fptr, Board* board) { /*TODO AUX DOC*/
-
-	/*implement by the instructions in "files format"*/
-
 	int intFromFile,i,j, inputRead;
 	char mychar;
-
+	int oldEdgeSize = board->edgeSize;
 
 	/*resets doubly-linked list*/
 	clearList(board->movesList);
@@ -263,18 +260,18 @@ void loadToBoard(FILE* fptr, Board* board) { /*TODO AUX DOC*/
 	/*loads n, m into board*/
 	inputRead = fscanf (fptr, "%d", &intFromFile);
 	board->blockLength=intFromFile;
-	assert(inputRead > 0);
+	assert(inputRead > 0); /*TODO ZZZ DEBUG ZZZ*/
 
 	inputRead = fscanf (fptr, "%d", &intFromFile);
 	board->blockHeight=intFromFile;
-	assert(inputRead > 0);
+	assert(inputRead > 0); /*TODO ZZZ DEBUG ZZZ*/
 
-	/*changes edgesize according to n,m*/
+	/*changes edgeSize according to n,m*/
 	board->edgeSize=board->blockHeight*board->blockLength;
 
 	/*initialize board->matrix and board->isFixed*/
-	initMatrix(board,1);
-	initMatrix(board,0);
+	initMatrix(board,1,oldEdgeSize);
+	initMatrix(board,0,oldEdgeSize);
 
 	/*loads cell values into board*/
 	for (i=0; i< board->edgeSize; i++) {
@@ -330,7 +327,7 @@ void eraseAllButYRandomCells(Board* board, int y) { /*TODO AUX DOC*/
 	}
 }
 
-void saveToFile(FILE* fptr,Board* board) { /*TODO AUX DOC*/
+void saveToFile(FILE* fptr,Board* board) {
 	int i,j;
 	/*first line of the file contains of the block length and block height*/
 	fprintf(fptr,"%d %d\n",board->blockLength,board->blockHeight);

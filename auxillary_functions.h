@@ -60,7 +60,7 @@ int exBackTracking(Board* board);
 /*
  *
  * Description:
- * Loads a puzzle from a path by updating the Sudoku board struct fields
+ * Loads a puzzle from a file by updating the Sudoku board struct fields
  *
  * Input:
  * A pointer to a file and the Sudoku board
@@ -86,6 +86,21 @@ int ILPSolver(Board* board);
 
 void eraseAllButYRandomCells(Board* board, int y);
 
+/*
+ *
+ * Description:
+ * Saves the Sudoku board to a file.
+ * The first line consists of the block length and the block height.
+ * Every line preceding the first line represents a line in the board,
+ * where a fixed cell is marked with a dot
+ *
+ * Input:
+ * A pointer to a file and the Sudoku board
+ *
+ * Output:
+ * None
+ *
+ * */
 void saveToFile(FILE* fptr,Board* board);
 
 int cellHasOnePossibleValue(Board* board, int x, int y);

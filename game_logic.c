@@ -5,74 +5,99 @@
 #include "doubly_linked_list.h"
 #include "auxillary_functions.h"
 
+
+/*
+ *
+ * Description:
+ * Loads a puzzle from a file and enters solve mode
+ *
+ * Input:
+ * fileName = a path, full or relative, and the Sudoku board
+ *
+ * Output:
+ * -1 if the file didn't open successfully
+ *  1 otherwise and this means the function successfully finished
+ *
+ * */
 int solve(char* fileName, Board* board) {
-	/*filename - full or relative*/
-	/*if file not opened return -1*/
-	/*changed the mode to solve (1)*/
-	/*available in all modes*/
-	/*resets doubly linked list*/
-	/*change to correct mode*/
 	FILE* file = NULL;
-	file = fopen(fileName,"r"); /*check if opened successfully*/
+	file = fopen(fileName,"r");
+	/*if file did not open successfully return -1*/
 	if (file == NULL) {
 		return -1;
 	}
+	/*loads the file to the board*/
 	loadToBoard(file,board);
+	/*enters solve mode*/
 	board->mode = 1;
 	return 1;
 }
 
 int edit(char* fileName, Board* board) {
-	/*filename - full or relative*/
-	/*filename \0 - empty board*/
-	/*if file not opened return -2*/
-	/*changed the mode to edit (2)*/
-	/*available in all modes*/
-
 	FILE* file = NULL;
+	/* if the user doesn't enter a path (or enters a NULL path),
+	 * initialize the default 9x9 empty board*/
 	if (fileName == NULL) {
 		initAsDefaultBoard(board);
 		board->mode = 2;
 		return 1;
 	}
-	file = fopen(fileName,"r"); /*check if opened successfully*/
+	/*else, opens the file*/
+	file = fopen(fileName,"r");
+	/*if file did not open successfully return -2*/
 	if (file == NULL) {
 		return -2;
 	}
+	/*loads the file to the board*/
 	loadToBoard(file,board);
+	/*enters edit mode*/
 	board->mode = 2;
 	return 1;
 }
 
 int mark_errors(int x, Board* board) {
-	/*verify that x is 1 or 0, else return error value*/
+	/*verifies that x is 1 or 0, if not, return -3*/
 	if (x != 0 && x != 1) {
 		return -3;
 	}
+	/*sets the mark errors field on/off*/
 	board->markErrors = x;
 	return 1;
 }
 
 int print_board(Board* board) {
-	/*available in solve, edit (1,2) mode*/
 	printBoard(board);
 	return 1;
 }
 
 int validate(Board* board) {
-	/*check if the board is erroneous, namely, it has 2 cells with same number which are neighbors
-	 * if it is erroneous - error (-6)
-	 * if it is unsolvable - error(-7)
-	 * else, it is valid - message(2) */
+	/*check if board is erroneous*/
 	if (isBoardErr(board)) {
 		return -6;
 	}
-	if (1==1) { /*check with ILP if the board is solvable (if it is, go in the if statement)*/
+	/*check if the board is solvable*/
+	if (1==1) {
 		return 2;
 	}
 	return -7;
 }
 
+/*
+ * Description:
+ * Determines whether the board is:
+ * 1) erroneous
+ * 2) not erroneous but unsolvable
+ * 3) not erroneous and solvable
+ *
+ * Input:
+ * The Sudoku board
+ *
+ * Output:
+ * 1) -6
+ * 2) -7
+ * 3) 2
+ *
+ * */
 int set(int x, int y, int z, Board* board) {
 	/*available in solve, edit (1,2) mode
 	 * if x,y,z not in range error (-4)

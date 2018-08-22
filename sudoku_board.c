@@ -9,8 +9,8 @@ void initAsDefaultBoard(Board* board) {
 	board->blockHeight = 3;
 	board->blockLength = 3;
 	board->edgeSize = 9;
-	initMatrix(board, 0);
-	initMatrix(board, 1);
+	initMatrix(board, 0, 9);
+	initMatrix(board, 1, 9);
 	board->markErrors = 1;
 	clearList(board->movesList);
 	board->currNode = NULL;
@@ -59,9 +59,15 @@ void copyMatrix(int** orig, int** new, int size){
 }
 /*if boardMatrix = 1 it initializes board->matrix
  *else, it initializes board->isFixed */
-void freeMatrix(Board* board, int boardMatrix) {
-	int i;
-	for (i=0 ; i<board->edgeSize ; i++) {
+void freeMatrix(Board* board, int boardMatrix, int oldEdgeSize) {
+	int i,numOfRows;
+	if (oldEdgeSize == 0) {
+		numOfRows = board->edgeSize;
+	}
+	else {
+		numOfRows = oldEdgeSize;
+	}
+	for (i=0 ; i<numOfRows ; i++) {
 		if (boardMatrix) {
 			free(board->matrix[i]);
 		}
@@ -78,7 +84,7 @@ void freeMatrix(Board* board, int boardMatrix) {
 }
 /*if boardMatrix = 1 it initializes board->matrix
  *else, it initializes board->isFixed */
-int initMatrix(Board* board, int boardMatrix) {
+int initMatrix(Board* board, int boardMatrix, int oldEdgeSize) {
 	int i;
 	int** matrix = NULL;
 	/*allocate memory for the board's matrix*/
@@ -91,14 +97,14 @@ int initMatrix(Board* board, int boardMatrix) {
 	}
 	if (boardMatrix) {
 		if(board->matrix != NULL) {
-			freeMatrix(board,1);
+			freeMatrix(board,1,oldEdgeSize);
 		}
 
 		board->matrix = matrix;
 	}
 	else {
 		if(board->isFixed != NULL) {
-			freeMatrix(board,0);
+			freeMatrix(board,0,oldEdgeSize);
 		}
 		board->isFixed = matrix;
 	}
@@ -124,9 +130,9 @@ Board* createBoard(int blockHeight, int blockLength) {
 	board->edgeSize=boardSize;
 	board->movesList = createEmptyList();
 	/*initializes board->matrix*/
-	allocationError1 = initMatrix(board,1);
+	allocationError1 = initMatrix(board,1,board->edgeSize);
 	/*initializes board->isFixed*/
-	allocationError2 = initMatrix(board,0);
+	allocationError2 = initMatrix(board,0,board->edgeSize);
 	printf("break4");
 
 	if (allocationError1 == 999 || allocationError2 == 999) {
@@ -153,8 +159,8 @@ Board* copyBoard(Board* board){
 
 
 void destroyBoard(Board* board){
-	freeMatrix(board,1);
-	freeMatrix(board,0);
+	freeMatrix(board,1,board->edgeSize);
+	freeMatrix(board,0,board->edgeSize);
 	freeList(board->movesList);
 	freeNode(board->currNode);
 	free(board);
