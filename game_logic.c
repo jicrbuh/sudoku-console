@@ -37,7 +37,7 @@ int edit(char* fileName, Board* board) {
 	FILE* file = NULL;
 	/* if the user doesn't enter a path (or enters a NULL path),
 	 * initialize the default 9x9 empty board*/
-	if (fileName == '\0') {
+	if ((fileName != NULL) && (fileName[0] == '\0')) {
 		initAsDefaultBoard(board);
 		board->mode = 2;
 		return 1;
@@ -130,7 +130,9 @@ int set(int x, int y, int z, Board* board) {
 	if (board->mode == 1) {
 		/*if board is full*/
 		if (numberOfFilledCells(board) == board->edgeSize*board->edgeSize) {
+			/*if board is valid*/
 			if (!isBoardErr(board)) {
+				/*enter init mode*/
 				board->mode = 0;
 				clearList(board->movesList);
 				return 10;
