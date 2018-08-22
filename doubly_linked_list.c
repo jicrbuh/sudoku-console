@@ -62,7 +62,7 @@ void printListFromTail(DLL* list) {
 }
 
 void freeStep(Step* step) {
-	if (step->list != NULL) {
+	if (step!= NULL && step->list != NULL) {
 		freeList(step->list);
 	}
 	free(step);
