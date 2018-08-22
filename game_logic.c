@@ -170,6 +170,10 @@ int undo(Board* board) {
 	}
 	/*move currNode one step backwards*/
 	board->currNode = board->currNode->prev;
+
+	/*prints the board*/
+	print_board(board);
+
 	return 4;
 }
 
@@ -197,6 +201,10 @@ int redo(Board* board) {
 			innerNode = innerNode->next;
 		}
 	}
+
+	/*prints the board*/
+	print_board(board);
+
 	return 4;
 }
 
