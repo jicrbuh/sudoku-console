@@ -6,11 +6,12 @@
 #include "doubly_linked_list.h"
 
 void initAsDefaultBoard(Board* board) {
+	int oldEdgeSize = board->edgeSize;
 	board->blockHeight = 3;
 	board->blockLength = 3;
 	board->edgeSize = 9;
-	initMatrix(board, 0, 9);
-	initMatrix(board, 1, 9);
+	initMatrix(board, 0, oldEdgeSize);
+	initMatrix(board, 1, oldEdgeSize);
 	board->markErrors = 1;
 	clearList(board->movesList);
 	board->currNode = NULL;

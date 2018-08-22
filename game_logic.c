@@ -132,7 +132,7 @@ int set(int x, int y, int z, Board* board) {
 		if (numberOfFilledCells(board) == board->edgeSize*board->edgeSize) {
 			/*if board is valid*/
 			if (!isBoardErr(board)) {
-				/*enter init mode*/
+				/*enters init mode*/
 				board->mode = 0;
 				clearList(board->movesList);
 				return 10;
