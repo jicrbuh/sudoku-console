@@ -182,7 +182,7 @@ int redo(Board* board) {
 	if (board->currNode->step->list == NULL) {
 		board->matrix[board->currNode->step->i][board->currNode->step->j] = board->currNode->step->new;
 	}
-	/*else the command is autofill iterate over the list of autofill sets from tail to headand undo them*/
+	/*else the command is autofill iterate over the list of autofill sets from tail to head and undo them*/
 	else {
 		Node* innerNode = board->currNode->step->list->head;
 		while (innerNode != NULL) {
@@ -191,7 +191,6 @@ int redo(Board* board) {
 		}
 	}
 
-	/*prints the board*/
 	print_board(board);
 
 	return 4;
@@ -295,6 +294,13 @@ int autofill(Board* board, int firstCall, int x, int y, int z) {
 	}
 	else {
 		board->matrix[x][y] = z;
+		/*if the board is full then it is also valid hence returns 10*/
+		if (numberOfFilledCells(board) == board->edgeSize*board->edgeSize) {
+			board->mode = 0;
+			clearList(board->movesList);
+			return 10;
+		}
+		/*else the board is not completed and return 11*/
 		return 11;
 	}
 }
