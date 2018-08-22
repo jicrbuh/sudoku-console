@@ -380,6 +380,12 @@ int cellHasOnePossibleValue(Board* board, int x, int y) { /*TODO AUX DOC*/
 	int i,valIsValid;
 	int val = 0;
 	int singleSolution = 0;
+
+	/*if cell is already filled, return -1*/
+	if (board->matrix[x][y] != 0) {
+		return -1;
+	}
+
 	/*iterate over the possible values*/
 	for (i=1 ; i<board->edgeSize+1 ; i++) {
 		/*check if value i is valid*/

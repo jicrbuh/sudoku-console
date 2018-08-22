@@ -259,7 +259,7 @@ int main() {
 	char* almost = "tests\\almost_filled.txt";
 	/*char* empty = "";
 
-	/*test_solve(path1,board,0);
+	test_solve(path1,board,0);
 	test_solve(empty,board,1);
 	test_edit(path1,board,0,0);
 	test_edit(empty,board,0,1);
@@ -268,10 +268,10 @@ int main() {
 	test_redo(board,1);*/
 
 	test_load(board,almost);
+	autofill(board, 1, 0,0,0);
 
-
-
+	printBoard(board);
 	destroyBoard(board);
-	printf("\ntest finihed!\n");
+	printf("############\ntest finihed!\n############");
 	return 0;
 }
