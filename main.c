@@ -147,11 +147,39 @@ int test_set(Board* board, int x, int y, int z,int inRange, int cellFixed) {
 	/*check if currNode is last Node*/
 	if (board->currNode != board->movesList->tail) {
 		printf("set Error: currnode doesn't point to the list's tail\n");
-		printList(board->movesList);
+
 		return -1;
 	}
-
+	printList(board->movesList);
 	/*TODO to check after ILP if can handle case of last cell correctly*/
+	return 0;
+}
+
+int test_undo(Board* board, int canUndo) {
+	int res = undo(board);
+	Node* oldNode = board->currNode;
+
+	printList(board->movesList);
+	if(canUndo) {
+		if (res == -11) {
+			printf("undo Error: there are moves to undo, but undo returns -11\n");
+			return -1;
+		}
+		/*check if currNode has changed*/
+		if (oldNode == board->currNode) {
+			printf("undo Error: currNode hasn't changed\n");
+			return -1;
+		}
+		/*check if movesList hasn't changed*/
+		printList(board->movesList);
+	}
+	else {
+	/*check if no moves to undo -11*/
+		if (res != -11) {
+			printf("undo Error: there aren't moves to undo, but undo didn't return -11\n");
+		}
+
+	}
 	return 0;
 }
 
@@ -203,6 +231,11 @@ int main() {
 	test_edit(path1,board,0,0);*/
 	test_edit(empty,board,0,1);
 	test_set(board, 1, 1, 1,1, 0);
+	/*test_undo(board, 1);*/
+	undo(board);
+	redo(board);
+
+
 	destroyBoard(board);
 	printf("\ntest finihed!\n");
 	return 0;
