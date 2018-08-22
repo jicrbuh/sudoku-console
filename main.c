@@ -70,19 +70,19 @@ int test_solve(char* inpath, Board* board, int isErr) {
 	int didsolve = solve(inpath, board);
 	if (isErr == 1) {
 		if (didsolve != -1) {
-			printf("ERROR: solve shouldn't be able to load file, but doesn't return -1");
+			printf("ERROR: solve shouldn't be able to load file, but doesn't return -1\n");
 			return -1;
 		}
 	}
 	else if (isErr == 0) {
 		if (didsolve == -1) {
-			printf("ERROR: solve returned -1, but should be able to load file");
+			printf("ERROR: solve returned -1, but should be able to load file\n");
 			return -1;
 		}
 	}
 	/*check if puzzle is in solve mode*/
 	if(board->mode != 1 && isErr == 0) {
-		printf("ERROR: solve didn't load puzzle in solve mode");
+		printf("ERROR: solve didn't load puzzle in solve mode\n");
 		return -1;
 	}
 
@@ -91,23 +91,23 @@ int test_solve(char* inpath, Board* board, int isErr) {
 
 int test_edit(char* inpath, Board* board, int isErr, int nopath) {
 	/*if file not found - check if prints the error and doesn't execute the command*/
-	int didedit = solve(inpath, board);
+	int didedit = edit(inpath, board);
 	if (isErr == 1) {
 		if (didedit != -2) {
-			printf("ERROR: edit shouldn't be able to load file, but doesn't return -1");
+			printf("ERROR: edit shouldn't be able to load file, but doesn't return -1\n");
 			return -1;
 		}
 	}
 	else if (isErr == 0) {
 		if (didedit == -2) {
-			printf("ERROR: edit returned -1, but should be able to load file");
+			printf("ERROR: edit returned -1, but should be able to load file\n");
 			return -1;
 		}
 	}
 
 	/*check if puzzle is in edit mode*/
 	if(board->mode != 2 && isErr == 0) {
-		printf("ERROR: edit didn't load puzzle in edit mode");
+		printf("ERROR: edit didn't load puzzle in edit mode\n");
 		return -1;
 	}
 
@@ -115,11 +115,11 @@ int test_edit(char* inpath, Board* board, int isErr, int nopath) {
 	/*EDIT if argument is empty, enter with an empty board 9x9, in EDIT mode*/
 	if (nopath) {
 		if (didedit == -2) {
-			printf("ERROR: edit should load an empty board, but returned -2");
+			printf("ERROR: edit should load an empty board, but returned -2\n");
 			return -1;
 		}
 		if (board->edgeSize != 9) {
-			printf("ERROR: edit should load an empty board, but edgeSize != 9");
+			printf("ERROR: edit should load an empty board, but edgeSize != 9\n");
 			return -1;
 		}
 	}
@@ -132,7 +132,7 @@ int test_edit(char* inpath, Board* board, int isErr, int nopath) {
 int main() {
 
 	Board* board = createBoard(2,2);
-	char* path1 = "tests\\load1.txt";
+	/*char* path1 = "tests\\load1.txt";*/
 	char* empty = "";
 	/*char* path2 = "tests\\load2.txt";
 	char* path3 = "tests\\load3.txt";
@@ -172,8 +172,10 @@ int main() {
 	printf("test_load_save for save23\n");
 	test_load_save(board, path23, save23);
 	 */
-	test_solve(path1,board,0);
+	/*test_solve(path1,board,0);
 	test_solve(empty,board,1);
+	test_edit(path1,board,0,0);*/
+	test_edit(empty,board,0,1);
 
 	destroyBoard(board);
 	printf("\ntest finihed!\n");

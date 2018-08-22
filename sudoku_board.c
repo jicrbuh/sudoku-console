@@ -115,12 +115,12 @@ Board* createBoard(int blockHeight, int blockLength) {
 	int allocationError1, allocationError2;
 	int boardSize = blockHeight*blockLength;
 	Board* board;
-	printf("break1");
+
 	board = (Board *) calloc(boardSize,sizeof(Board));
 	if (board == NULL) {
 		return NULL; /*if allocation failed, returns NULL*/
 	}
-	printf("break3");
+
 
 	/*TODO When writing main function decide if to do markErrors = 1 in createBoard or independently in main function
 	 * or keep it here in createBoard */
@@ -133,12 +133,12 @@ Board* createBoard(int blockHeight, int blockLength) {
 	allocationError1 = initMatrix(board,1,board->edgeSize);
 	/*initializes board->isFixed*/
 	allocationError2 = initMatrix(board,0,board->edgeSize);
-	printf("break4");
+
 
 	if (allocationError1 == 999 || allocationError2 == 999) {
 		return NULL;
 	}
-	printf("break5");
+
 
 	return board;
 }
