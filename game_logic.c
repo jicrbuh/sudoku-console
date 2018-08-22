@@ -82,22 +82,8 @@ int validate(Board* board) {
 	return -7;
 }
 
-/*
- * Description:
- * sets the value of cell x,y to z or empties a cell by using z==0
- *
- * Input:
- * x,y - coordinates of a cell, x for row and y for column
- * z - a value to be set in cell x,y
- * The Sudoku board
- *
- * Output:
- * -4 if the x,y or z are not in range
- * -5 if cell x,y is fixed
- *
- *
- * */
 int set(int x, int y, int z, Board* board) {
+
 	int oldval;
 
 	/*checks if x,y,z are in range*/
@@ -132,7 +118,7 @@ int set(int x, int y, int z, Board* board) {
 		if (numberOfFilledCells(board) == board->edgeSize*board->edgeSize) {
 			/*if board is valid*/
 			if (!isBoardErr(board)) {
-				/*enters init mode*/
+				/*enters init mode and clear the moves list*/
 				board->mode = 0;
 				clearList(board->movesList);
 				return 10;
@@ -146,17 +132,22 @@ int set(int x, int y, int z, Board* board) {
 }
 
 int generate(Board* board, int x, int y) {
-	/*if 1000 iterations fail - error (-10)*/
 	int errorCounter = 0;
 	while (errorCounter < 1000) {
+		/*clears the Sudoku board*/
 		clearMatrix(board->matrix,board->edgeSize);
+		/*fill it with x random cells*/
 		fillXRandomCells(board,x);
+		/*if ILP successfully filled all the empty cells*/
 		if (ILPSolver(board)){
+			/*erase y random cells*/
 			eraseAllButYRandomCells(board,y);
 			return 1;
 		}
 		errorCounter++;
 	}
+	/*if we got here then the process in the while block failed
+	 * for a 1000 times. in this case we stop and return -10*/
 	return -10;
 }
 

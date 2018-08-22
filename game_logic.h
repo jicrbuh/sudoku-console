@@ -85,8 +85,39 @@ int print_board(Board* board);
  * */
 int validate(Board* board);
 
-
+/*
+ * Description:
+ * Sets the value of cell x,y to z or empties a cell by using z==0.
+ * If the board is finished successfully the function restarts the game to init mode.
+ *
+ * Input:
+ * x,y - coordinates of a cell, x for row and y for column
+ * z - a value to be set in cell x,y
+ * The Sudoku board
+ *
+ * Output:
+ * -4 if the x,y or z are not in range
+ * -5 if cell x,y is fixed
+ * 10 if the board is full and correct
+ *  9 if the board is full but erroneous
+ *
+ * */
 int set(int x, int y, int z, Board* board);
+
+/*
+ * Description:
+ * Generates a solvable board with y empty cells
+ *
+ * Input:
+ * x - number of cells to fill before running ILP
+ * y - number of cells to delete after running ILP
+ * The Sudoku board
+ *
+ * Output:
+ * -10 if the function failed to generate the board
+ *  1 if the process ended successfully
+ *
+ *  */
 int generate(Board* board, int x, int y);
 int undo(Board* board);
 int redo(Board* board);

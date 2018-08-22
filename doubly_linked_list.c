@@ -154,6 +154,9 @@ void clearList(DLL* list) {
 }
 
 void deleteAllNextNodes(DLL* list, Node* node) {
+	if (node == NULL || node->next == NULL) {
+		return;
+	}
 	Node* curr = NULL;
 	Node* next = NULL;
 
