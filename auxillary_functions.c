@@ -63,8 +63,8 @@ void initStack(Board* board, DLL* stack) {
 	/* iterates over the board from end to start
 	 * and pushes the empty cell elements to stack*/
 	int i,j;
-	for (i=board->edgeSize ; i>0 ; i--) {
-		for (j=board->edgeSize ; j>0 ; j--) {
+	for (i=board->edgeSize -1; i>-1 ; i--) {
+		for (j=board->edgeSize -1; j>-1 ; j--) {
 			if (board->matrix[i][j] == 0) {
 				/*push*/
 				addFirst(stack,createNode(createStep(i,j,0,0,NULL)));
