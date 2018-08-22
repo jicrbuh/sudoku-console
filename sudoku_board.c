@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "auxillary_functions.h"
+#include "auxiliary_functions.h"
 #include "doubly_linked_list.h"
+#include "SPBufferset.h"
+
 
 void initAsDefaultBoard(Board* board) {
 	int oldEdgeSize = board->edgeSize;

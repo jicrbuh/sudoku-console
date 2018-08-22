@@ -8,6 +8,8 @@
 #ifndef SUDOKU_BOARD_H_
 #define SUDOKU_BOARD_H_
 #include "doubly_linked_list.h"
+#include "SPBufferset.h"
+
 
 typedef struct board_t {
 

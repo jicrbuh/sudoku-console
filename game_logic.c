@@ -3,7 +3,9 @@
 #include <string.h>
 #include "sudoku_board.h"
 #include "doubly_linked_list.h"
-#include "auxillary_functions.h"
+#include "auxiliary_functions.h"
+#include "SPBufferset.h"
+
 
 
 int solve(char* fileName, Board* board) {
@@ -24,7 +26,7 @@ int edit(char* fileName, Board* board) {
 	FILE* file = NULL;
 	/* if the user doesn't enter a path (or enters a NULL path),
 	 * initialize the default 9x9 empty board*/
-	if ((fileName != NULL) && (fileName[0] == '\0')) {
+	if (fileName == NULL) {
 		initAsDefaultBoard(board);
 		board->mode = 2;
 		return 1;

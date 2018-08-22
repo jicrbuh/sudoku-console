@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "auxillary_functions.h"
+#include "auxiliary_functions.h"
 #include "doubly_linked_list.h"
 #include "game_logic.h"
 #include "user_interface.h"
@@ -254,24 +254,13 @@ int test_loads(Board *board) {
 	return 0;
 }
 int main() {
-
+	int gameActive = 1;
 	Board* board = createBoard(2,2);
-	char* almost = "tests\\almost_filled.txt";
-	/*char* empty = "";
-
-	test_solve(path1,board,0);
-	test_solve(empty,board,1);
-	test_edit(path1,board,0,0);
-	test_edit(empty,board,0,1);
-	test_set(board, 1, 1, 1,1, 0);
-	test_undo(board, 1);
-	test_redo(board,1);*/
-
-	test_load(board,almost);
-	autofill(board, 1, 0,0,0);
-
-	printBoard(board);
-	destroyBoard(board);
-	printf("############\ntest finihed!\n############");
-	return 0;
+	printf("Sudoku\n------\n");
+	while (gameActive) {
+		if (interact(board)==-2) {
+			gameActive = 0;
+		}
+	}
+	return 129000;
 }

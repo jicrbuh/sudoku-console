@@ -4,7 +4,8 @@
 #include "sudoku_board.h"
 #include "doubly_linked_list.h"
 #include "game_logic.h"
-#include "auxillary_functions.h"
+#include "auxiliary_functions.h"
+#include "SPBufferset.h"
 #define COMMAND_LENGTH 257
 /*parses user commands and calls the functions from game_logic (maybe)*/
 /*take strcmp at the beginning once, check if it's possible*/
@@ -13,35 +14,35 @@ int parseCommand(char* userInput, Board* board){
 	int firstArgumentAsInt, secondArgumentAsInt, thirdArgumentAsInt, retVal;
 	command = strtok(userInput," \t\r\n");
 	firstArgument = strtok(NULL," \t\r\n");
-	firstArgumentAsInt = (int)strtol(strtok(NULL," \t\r\n"),&endptr1,10);
+	firstArgumentAsInt = (int)strtol(firstArgument,&endptr1,10);
 	secondArgumentAsInt = (int)strtol(strtok(NULL," \t\r\n"),&endptr2,10);
 	thirdArgumentAsInt = (int)strtol(strtok(NULL," \t\r\n"),&endptr3,10);
-	if (strcmp(userInput,"solve") == 0) {
+	if (strcmp(command,"solve") == 0) {
 		if (firstArgument == NULL) return 0; /*check validity of argument: argument is not NULL*/
 		return solve(firstArgument, board); /*if we got here argument is valid, call the command's function*/
 	}
 	else if (strcmp(command,"edit") == 0) {
 		return edit(firstArgument, board); /*no need to check validity, if NULL then solve knows its with 0 argument*/
 	}
-	else if (strcmp(command,"mark_errors")) {
+	else if (strcmp(command,"mark_errors") == 0) {
 		if (board->mode != 1) return 0;
 		if (endptr1 == NULL) return -3; /*check validity: check if argument is zero (atoi function problem)*/
 		else return mark_errors(firstArgumentAsInt, board); /*mark errors will check if it is 0/1 or not*/
 	}
-	else if (strcmp(command,"print_board")) {
+	else if (strcmp(command,"print_board") == 0) {
 		if (board->mode == 0) return 0; /*not allowed in init mode*/
 		return print_board(board);
 	}
-	else if (strcmp(command, "set")) {
+	else if (strcmp(command, "set") == 0) {
 		if (board->mode == 0) return 0; /*not allowed in init mode*/
 		if (endptr1 == NULL || endptr2 == NULL || endptr3 == NULL) return -4; /*verify that all arguments are integers*/
 		return set(secondArgumentAsInt-1,firstArgumentAsInt-1,thirdArgumentAsInt,board); /*set will check if the arguments are in range*/
 	}
-	else if (strcmp(command,"validate"	)) {
+	else if (strcmp(command,"validate") == 0) {
 		if (board->mode == 0) return 0; /*not allowed in init mode*/
 		return validate(board);
 	}
-	else if (strcmp(command,"generate")) {
+	else if (strcmp(command,"generate") == 0) {
 		if (board->mode != 2) return 0; /*only allowed in edit mode*/
 		if (endptr1 == NULL || endptr2 == NULL || firstArgumentAsInt > numberOfBlankCells(board)) return -8;
 		/*asked in the forum if need to check y is a valid int (same we did for x). in the instructions they say only for x but
@@ -49,60 +50,53 @@ int parseCommand(char* userInput, Board* board){
 		if (numberOfFilledCells(board) != 0) return -9;
 		return generate(board,firstArgumentAsInt,secondArgumentAsInt);
 	}
-	else if (strcmp(command,"undo")) {
+	else if (strcmp(command,"undo") == 0) {
 		if (board->mode == 0) return 0; /*not allowed in init mode*/
 		return undo(board);
 	}
-	else if (strcmp(command,"redo")) {
+	else if (strcmp(command,"redo") == 0) {
 		if (board->mode == 0) return 0; /*not allowed in init mode*/
 		return redo(board);
 	}
-	else if (strcmp(command,"save")) {
+	else if (strcmp(command,"save") == 0) {
 		if (board->mode == 0) return 0; /*not allowed in init mode*/
 		retVal = save(board,firstArgument);
 		if (retVal==1) printf("Save to: %s\n", firstArgument);
 		return retVal;
 	}
-	else if (strcmp(command, "hint")) {
+	else if (strcmp(command, "hint") == 0) {
 		if (board->mode != 1) return 0; /*only allowed in solve mode*/
 		if (endptr1 == NULL || endptr2 == NULL) return -4; /*verify that all arguments are integers*/
 		return hint(board,secondArgumentAsInt-1,firstArgumentAsInt-1);
 	}
-	else if (strcmp(command, "num_solutions")) {
+	else if (strcmp(command, "num_solutions") == 0) {
 		if (board->mode == 0) return 0; /*not allowed in init mode*/
 		return num_solutions(board);
 	}
-	else if (strcmp(command, "autofill")) {
+	else if (strcmp(command, "autofill") == 0) {
 		if (board->mode != 1) return 0; /*only allowed in solve mode*/
 		return autofill(board,1,0,0,0);
 	}
-	else if (strcmp(command, "reset")) {
+	else if (strcmp(command, "reset") == 0) {
 		if (board->mode == 0) return 0; /*not allowed in init mode*/
 		return reset(board);
 	}
-	else if (strcmp(command, "exit")) {
+	else if (strcmp(command, "exit") == 0) {
 		return userExit(board); /*available in all modes*/
 	}
 
 	return 1;
 }
 
-int read_command(int mode){
-	/*scanf + calls parse_command*/
-	mode = 666;
-	return mode;
-}
-
-int read_print_error(Board* board){
+int interact(Board* board){
 	Node* autofillCurrNode;
-	char userInput[COMMAND_LENGTH]  = {0};
-	/*prints 'please enter a command'*/
+	char userInput[COMMAND_LENGTH] = {0};
 	printf("Enter your command\n");
 	fgets(userInput,COMMAND_LENGTH,stdin);
-	if (userInput[COMMAND_LENGTH] != 0) {
-		printf("ERROR: invalid command\n"); /*command too long - returning -1*/
-		return -1;
+	if (userInput[COMMAND_LENGTH-1] != '\0') {
+		printf("ERROR: invalid command\n");
 	}
+
 	/*calls read_command and prints errors if necessary (board->autofillCounter < board->autofillNumberOfCells)*/
 	switch(parseCommand(userInput,board)) {
 		case(11):
@@ -131,6 +125,7 @@ int read_print_error(Board* board){
 			break;
 		case (8):
 			printf("Exiting...\n");
+			return -2;
 			break;
 		case (7):
 			printf("Board reset\n");

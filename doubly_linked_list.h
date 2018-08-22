@@ -7,6 +7,7 @@
 
 #ifndef DOUBLY_LINKED_LIST_H_
 #define DOUBLY_LINKED_LIST_H_
+#include "SPBufferset.h"
 
 typedef struct Step{
 	int i;
