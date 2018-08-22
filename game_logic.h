@@ -119,7 +119,32 @@ int set(int x, int y, int z, Board* board);
  *
  *  */
 int generate(Board* board, int x, int y);
+
+/*
+ * Description:
+ * Undo previous moves done by the user and prints the updated board
+ *
+ * Input:
+ * The Sudoku board
+ *
+ * Output:
+ * 4 - always (to notify the process has ended)
+ *
+ *  */
 int undo(Board* board);
+
+/*
+ * Description:
+ * redo the last undo done by the user in case the last move was undo
+ *
+ * Input:
+ * The Sudoku board
+ *
+ * Output:
+ * -12 if there are no moves to redo (namely, the last move was not undo)
+ *  4  otherwise, to notify the process has ended successfully
+ *
+ *  */
 int redo(Board* board);
 int save(Board* board, char* fileName);
 int hint(Board* board, int x, int y);
