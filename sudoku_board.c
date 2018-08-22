@@ -163,7 +163,6 @@ void destroyBoard(Board* board){
 	freeMatrix(board,1,board->edgeSize);
 	freeMatrix(board,0,board->edgeSize);
 	freeList(board->movesList);
-	freeNode(board->currNode);
 	free(board);
 }
 
