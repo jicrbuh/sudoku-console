@@ -67,6 +67,7 @@ void freeStep(Step* step) {
 			freeList(step->list);
 		}
 		free(step);
+	}
 }
 
 void freeNode(Node* node) {

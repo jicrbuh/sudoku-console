@@ -6,19 +6,6 @@
 #include "auxillary_functions.h"
 
 
-/*
- *
- * Description:
- * Loads a puzzle from a file and enters solve mode
- *
- * Input:
- * fileName = a path, full or relative, and the Sudoku board
- *
- * Output:
- * -1 if the file didn't open successfully
- *  1 otherwise and this means the function successfully finished
- *
- * */
 int solve(char* fileName, Board* board) {
 	FILE* file = NULL;
 	file = fopen(fileName,"r");
@@ -136,8 +123,10 @@ int generate(Board* board, int x, int y) {
 	while (errorCounter < 1000) {
 		/*clears the Sudoku board*/
 		clearMatrix(board->matrix,board->edgeSize);
+
 		/*fill it with x random cells*/
 		fillXRandomCells(board,x);
+
 		/*if ILP successfully filled all the empty cells*/
 		if (ILPSolver(board)){
 			/*erase y random cells*/
@@ -160,7 +149,7 @@ int undo(Board* board) {
 	else if (board->currNode->step->list == NULL) {
 		board->matrix[board->currNode->step->i][board->currNode->step->j] = board->currNode->step->old;
 	}
-	/*else the command is autofill iterate over the list of autofill sets from tail to headand undo them*/
+	/*else the command is autofill iterate over the list of autofill sets from tail to head and undo them*/
 	else {
 		Node* innerNode = board->currNode->step->list->tail;
 		while (innerNode != NULL) {
@@ -175,7 +164,7 @@ int undo(Board* board) {
 
 int redo(Board* board) {
 	/*if no moves to redo - error (-12)*/
-	if (board->currNode->next == NULL || (board->currNode == NULL && board->movesList->head == NULL)) {
+	if ((board->currNode == NULL && board->movesList->head == NULL) || (board->currNode != NULL && board->currNode->next == NULL)) {
 		return -12;
 	}
 	/*currNode is updated to be the node it should be when exiting the function*/
