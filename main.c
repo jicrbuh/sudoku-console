@@ -183,12 +183,39 @@ int test_undo(Board* board, int canUndo) {
 	return 0;
 }
 
-int main() {
+int test_redo(Board* board, int can) {
+	int res = redo(board);
+		Node* oldNode = board->currNode;
 
-	Board* board = createBoard(2,2);
-	/*char* path1 = "tests\\load1.txt";*/
-	char* empty = "";
-	/*char* path2 = "tests\\load2.txt";
+		printList(board->movesList);
+		if(can) {
+			if (res == -11) {
+				printf("redo Error: there are moves to redo, but redo returns -12\n");
+				return -1;
+			}
+			/*check if currNode has changed*/
+			if (oldNode == board->currNode) {
+				printf("redo Error: currNode hasn't changed\n");
+				return -1;
+			}
+			/*check if movesList hasn't changed*/
+			printList(board->movesList);
+		}
+		else {
+		/*check if no moves to redo -12*/
+			if (res != -12) {
+				printf("redo Error: there aren't moves to redo, but redo didn't return -12\n");
+			}
+
+		}
+		return 0;
+
+	return 0;
+}
+
+int test_loads(Board *board) {
+	char* path1 = "tests\\load1.txt";
+	char* path2 = "tests\\load2.txt";
 	char* path3 = "tests\\load3.txt";
 	char* not_err = "tests\\not_err.txt";
 	char* err00 = "tests\\err_0_0.txt";
@@ -196,8 +223,6 @@ int main() {
 	char* path23 = "tests\\load_2x3.txt";
 	char* save23 = "tests\\saved_2x3.txt";
 	char* save1 = "tests\\saved_1.txt";
-
-
 
 	printf("test_load for load1\n");
 	test_load(board, path1);
@@ -225,18 +250,28 @@ int main() {
 
 	printf("test_load_save for save23\n");
 	test_load_save(board, path23, save23);
-	 */
-	/*test_solve(path1,board,0);
+
+	return 0;
+}
+int main() {
+
+	Board* board = createBoard(2,2);
+	char* almost = "tests\\almost_filled.txt";
+	/*char* empty = "";
+
+	test_solve(path1,board,0);
 	test_solve(empty,board,1);
-	test_edit(path1,board,0,0);*/
+	test_edit(path1,board,0,0);
 	test_edit(empty,board,0,1);
 	test_set(board, 1, 1, 1,1, 0);
-	/*test_undo(board, 1);*/
-	undo(board);
-	redo(board);
+	test_undo(board, 1);
+	test_redo(board,1);*/
 
+	test_load(board,almost);
+	autofill(board, 1, 0,0,0);
 
+	printBoard(board);
 	destroyBoard(board);
-	printf("\ntest finihed!\n");
+	printf("############\ntest finihed!\n############");
 	return 0;
 }
