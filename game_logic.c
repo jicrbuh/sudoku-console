@@ -37,7 +37,7 @@ int edit(char* fileName, Board* board) {
 	FILE* file = NULL;
 	/* if the user doesn't enter a path (or enters a NULL path),
 	 * initialize the default 9x9 empty board*/
-	if (fileName == NULL) {
+	if (fileName == '\0') {
 		initAsDefaultBoard(board);
 		board->mode = 2;
 		return 1;
@@ -84,48 +84,52 @@ int validate(Board* board) {
 
 /*
  * Description:
- * Determines whether the board is:
- * 1) erroneous
- * 2) not erroneous but unsolvable
- * 3) not erroneous and solvable
+ * sets the value of cell x,y to z or empties a cell by using z==0
  *
  * Input:
+ * x,y - coordinates of a cell, x for row and y for column
+ * z - a value to be set in cell x,y
  * The Sudoku board
  *
  * Output:
- * 1) -6
- * 2) -7
- * 3) 2
+ * -4 if the x,y or z are not in range
+ * -5 if cell x,y is fixed
+ *
  *
  * */
 int set(int x, int y, int z, Board* board) {
-	/*available in solve, edit (1,2) mode
-	 * if x,y,z not in range error (-4)
-	 * if x,y, fixed (-5)*/
 	int oldval;
-	/*check if x,y,z are in range*/
+
+	/*checks if x,y,z are in range*/
 	if (x<0 || y<0 || z<0 || x > board->edgeSize-1 || y > board->edgeSize-1 || z > board->edgeSize) {
 		return -4;
 	}
-	/*check if cell is fixed*/
+	/*checks if cell is fixed*/
 	if (board->isFixed[x][y] == 1) {
 		return -5;
 	}
+	/*saves the old value of cell x,y*/
 	oldval = board->matrix[x][y];
-	/*set the value*/
+
+	/*sets the value*/
 	board->matrix[x][y] = z;
-	/*delete all redo moves (all moves after currNode)*/
+
+	/*deletes all redo moves (all moves after currNode)*/
 	deleteAllNextNodes(board->movesList, board->currNode);
 
-	/*add move to the end of the list*/
+	/*adds move to the tail of the list*/
 	addLast(board->movesList, createNode(createStep(x,y,oldval,z,NULL)));
 
-	/*update the tail of the list*/
+	/*updates currNore to point at the tail of the list*/
 	board->currNode = board->movesList->tail;
 
+	/*prints the board*/
 	print_board(board);
-	if (board->mode == 1) { /*if we are in solve mode*/
-		if (numberOfFilledCells(board) == board->edgeSize*board->edgeSize) { /*if board is full*/
+
+	/*if in solve mode*/
+	if (board->mode == 1) {
+		/*if board is full*/
+		if (numberOfFilledCells(board) == board->edgeSize*board->edgeSize) {
 			if (!isBoardErr(board)) {
 				board->mode = 0;
 				clearList(board->movesList);
@@ -136,7 +140,7 @@ int set(int x, int y, int z, Board* board) {
 			}
 		}
 	}
-	return 666; /*shouldn't get here, somthing's wrong*/
+	return 1;
 }
 
 int generate(Board* board, int x, int y) {
