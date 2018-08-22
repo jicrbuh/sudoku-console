@@ -337,7 +337,7 @@ int saveToFile(FILE* fptr,Board* board) { /*TODO AUX DOC*/
 	for (i=0 ; i<board->edgeSize ; i++) {
 		for (j=0 ; j<board->edgeSize ; j++) {
 			if (j == board->edgeSize-1) {
-				if (board->mode == 2) {
+				if (board->mode == 2 || board->isFixed[i][j]) {
 					fprintf(fptr,"%d.\n",board->matrix[i][j]);
 				}
 				else {
@@ -345,7 +345,7 @@ int saveToFile(FILE* fptr,Board* board) { /*TODO AUX DOC*/
 				}
 			}
 			else {
-				if (board->mode == 2) {
+				if (board->mode == 2 || board->isFixed[i][j]) {
 					fprintf(fptr,"%d. ",board->matrix[i][j]);
 				}
 				else {

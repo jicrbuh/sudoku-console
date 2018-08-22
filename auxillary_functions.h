@@ -10,7 +10,7 @@
 #include "sudoku_board.h"
 
 
-/*
+/*TODO TESTED
  *
  * Description:
  * Checks whether cell x,y is erroneous
@@ -57,7 +57,7 @@ void initStack(Board* board, DLL* stack);
 int exBackTracking(Board* board);
 
 
-/*
+/*TODO TESTED
  *
  * Description:
  * Loads a puzzle from a path by updating the Sudoku board struct fields
@@ -86,6 +86,7 @@ int ILPSolver(Board* board);
 
 void eraseAllButYRandomCells(Board* board, int y);
 
+/*TODO tested*/
 int saveToFile(FILE* fptr,Board* board);
 
 int cellHasOnePossibleValue(Board* board, int x, int y);
