@@ -330,22 +330,28 @@ void eraseAllButYRandomCells(Board* board, int y) { /*TODO AUX DOC*/
 	}
 }
 
-int saveToFile(FILE* fptr,Board* board) { /*TODO AUX DOC*/
-	/*if in edit mode, save all cells as fixed*/
+void saveToFile(FILE* fptr,Board* board) { /*TODO AUX DOC*/
 	int i,j;
+	/*first line of the file contains of the block length and block height*/
 	fprintf(fptr,"%d %d\n",board->blockLength,board->blockHeight);
+	/*iterate over the rows*/
 	for (i=0 ; i<board->edgeSize ; i++) {
+		/*iterate over the cells in row i*/
 		for (j=0 ; j<board->edgeSize ; j++) {
+			/*if this is the end of a row write the cell with a line drop */
 			if (j == board->edgeSize-1) {
-				if (board->mode == 2) {
+				/*if in edit mode or cell is fixed mark cell as fixed*/
+				if (board->mode == 2 || board->isFixed[i][j]) {
 					fprintf(fptr,"%d.\n",board->matrix[i][j]);
 				}
 				else {
 					fprintf(fptr,"%d\n",board->matrix[i][j]);
 				}
 			}
+			/*else, write the cell without a line drop*/
 			else {
-				if (board->mode == 2) {
+				/*if in edit mode or cell is fixed mark cell as fixed*/
+				if (board->mode == 2 || board->isFixed[i][j]) {
 					fprintf(fptr,"%d. ",board->matrix[i][j]);
 				}
 				else {
@@ -354,7 +360,6 @@ int saveToFile(FILE* fptr,Board* board) { /*TODO AUX DOC*/
 			}
 		}
 	}
-	return 0;
 }
 
 

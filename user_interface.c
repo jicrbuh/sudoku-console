@@ -8,7 +8,7 @@
 #define COMMAND_LENGTH 257
 /*parses user commands and calls the functions from game_logic (maybe)*/
 /*take strcmp at the beginning once, check if it's possible*/
-int parseCommand(char *userInput, Board* board){
+int parseCommand(char* userInput, Board* board){
 	char *endptr1, *endptr2, *endptr3, *firstArgument, *command;
 	int firstArgumentAsInt, secondArgumentAsInt, thirdArgumentAsInt, retVal;
 	command = strtok(userInput," \t\r\n");

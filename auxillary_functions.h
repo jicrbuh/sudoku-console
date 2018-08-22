@@ -86,7 +86,7 @@ int ILPSolver(Board* board);
 
 void eraseAllButYRandomCells(Board* board, int y);
 
-int saveToFile(FILE* fptr,Board* board);
+void saveToFile(FILE* fptr,Board* board);
 
 int cellHasOnePossibleValue(Board* board, int x, int y);
 
