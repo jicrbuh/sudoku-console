@@ -7,6 +7,7 @@
 #include "user_interface.h"
 #include "sudoku_board.h"
 #include "SPBufferset.h"
+#include <assert.h>
 int test_load(Board* board, char* path);
 
 int test_load_save(Board* board, char* inpath, char* outpath) {
@@ -129,6 +130,31 @@ int test_edit(char* inpath, Board* board, int isErr, int nopath) {
 
 }
 
+int test_set(Board* board, int x, int y, int z,int inRange, int cellFixed) {
+	/*TODO chcek if only available in solve,edit modes - can only check from user interface*/
+	int setVal = set(x,y,z,board);
+	/*checks if x,y,z are in range - returns -4*/
+	if (!inRange) {
+		assert(setVal == -4);
+		return -1;
+	}
+
+	/*returns if cell if fixed (-5)*/
+	if (cellFixed) {
+		assert(setVal == -5);
+		return -1;
+	}
+	/*check if currNode is last Node*/
+	if (board->currNode != board->movesList->tail) {
+		printf("set Error: currnode doesn't point to the list's tail\n");
+		printList(board->movesList);
+		return -1;
+	}
+
+	/*TODO to check after ILP if can handle case of last cell correctly*/
+	return 0;
+}
+
 int main() {
 
 	Board* board = createBoard(2,2);
@@ -176,7 +202,7 @@ int main() {
 	test_solve(empty,board,1);
 	test_edit(path1,board,0,0);*/
 	test_edit(empty,board,0,1);
-
+	test_set(board, 1, 1, 1,1, 0);
 	destroyBoard(board);
 	printf("\ntest finihed!\n");
 	return 0;
