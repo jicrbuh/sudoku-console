@@ -6,7 +6,6 @@
  */
 #include <stdio.h>
 #include <string.h>
-#include <dos.h>
 #include <assert.h>
 #include <stdlib.h>
 #include "SPBufferset.h"
