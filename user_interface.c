@@ -15,31 +15,26 @@ int parseCommand(char* userInput, Board* board){
 
 	/*store the name of the command*/
 	command = strtok(userInput," \t\r\n");
-	fprintf(stderr, "command = strtok(userInput, )\n");/*todo delete*/
 
 	/*store first argument*/
 	firstArgument = strtok(NULL," \t\r\n");
-	fprintf(stderr, "firstArgument = strtok(userInput, )\n");/*todo delete*/
 
 	secondArgument = strtok(NULL," \t\r\n");
 	thirdArgument = strtok(NULL," \t\r\n");
 
-
 	/*store arguments 1,2,3 as ints*/
 	if (firstArgument != NULL) {
 		firstArgumentAsInt = (int)strtol(firstArgument,&endptr1,10);
-		fprintf(stderr, "firstArgument = strtok(userInput, )\n");/*todo delete*/
-	}
 
+	}
 
 	if (secondArgument != NULL) {
 		secondArgumentAsInt = (int)strtol(firstArgument,&endptr1,10);
-		fprintf(stderr, "2Argument = strtok(userInput, )\n");/*todo delete*/
+
 	}
 
 	if (thirdArgument != NULL) {
 		thirdArgumentAsInt = (int)strtol(firstArgument,&endptr1,10);
-		fprintf(stderr, "3Argument = strtok(userInput, )\n");/*todo delete*/
 	}
 
 	if (strcmp(command,"solve") == 0) {
@@ -121,15 +116,15 @@ int interact(Board* board){
 	printf("Enter your command:\n");
 	fgets(userInput,COMMAND_LENGTH+2,stdin);
 	/*if the 257th character is used it's an invalid command*/
-	fprintf(stderr, "passed fgets \n");
+
 	if (userInput[COMMAND_LENGTH] != '\0') {
-		fprintf(stderr, "into if block\n"); /*todo delete*/
-		printf("ERROR: invalid command\n");/*todo delete*/
+
+		printf("ERROR: invalid command\n");
 		/*empty the buffer leftovers*/
 		while ((bufferCleaner = getchar()) != '\n');
 		return 1;
 	}
-	fprintf(stderr, "passed if block\n");/*todo delete*/
+
 	switch(parseCommand(userInput,board)) {
 		case(11):
 			/* the last node added is a list of the autofill set moves. we start with the head of the list
