@@ -16,26 +16,26 @@ int parseCommand(char* userInput, Board* board){
 	/*store the name of the command*/
 	command = strtok(userInput," \t\r\n");
 
-	/*store first argument*/
+	/*stores arguments*/
 	firstArgument = strtok(NULL," \t\r\n");
-
-	secondArgument = strtok(NULL," \t\r\n");
-	thirdArgument = strtok(NULL," \t\r\n");
-
 	/*store arguments 1,2,3 as ints*/
 	if (firstArgument != NULL) {
 		firstArgumentAsInt = (int)strtol(firstArgument,&endptr1,10);
-
 	}
-
+	secondArgument = strtok(NULL," \t\r\n");
 	if (secondArgument != NULL) {
-		secondArgumentAsInt = (int)strtol(firstArgument,&endptr1,10);
-
+		secondArgumentAsInt = (int)strtol(secondArgument,&endptr2,10);
 	}
-
+	thirdArgument = strtok(NULL," \t\r\n");
 	if (thirdArgument != NULL) {
-		thirdArgumentAsInt = (int)strtol(firstArgument,&endptr1,10);
+		thirdArgumentAsInt = (int)strtol(thirdArgument,&endptr3,10);
 	}
+
+
+
+
+
+
 
 	if (strcmp(command,"solve") == 0) {
 		/*check validity of argument: argument is not NULL*/
