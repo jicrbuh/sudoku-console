@@ -9,16 +9,39 @@
 #define COMMAND_LENGTH 256
 
 int parseCommand(char* userInput, Board* board){
-	char *endptr1, *endptr2, *endptr3, *firstArgument, *command;
+	char *endptr1 = NULL, *endptr2= NULL, *endptr3= NULL;
+	char *firstArgument, *secondArgument, *thirdArgument,  *command;
 	int firstArgumentAsInt, secondArgumentAsInt, thirdArgumentAsInt, retVal;
+
 	/*store the name of the command*/
 	command = strtok(userInput," \t\r\n");
+	fprintf(stderr, "command = strtok(userInput, )\n");/*todo delete*/
+
 	/*store first argument*/
 	firstArgument = strtok(NULL," \t\r\n");
+	fprintf(stderr, "firstArgument = strtok(userInput, )\n");/*todo delete*/
+
+	secondArgument = strtok(NULL," \t\r\n");
+	thirdArgument = strtok(NULL," \t\r\n");
+
+
 	/*store arguments 1,2,3 as ints*/
-	firstArgumentAsInt = (int)strtol(firstArgument,&endptr1,10);
-	secondArgumentAsInt = (int)strtol(strtok(NULL," \t\r\n"),&endptr2,10);
-	thirdArgumentAsInt = (int)strtol(strtok(NULL," \t\r\n"),&endptr3,10);
+	if (firstArgument != NULL) {
+		firstArgumentAsInt = (int)strtol(firstArgument,&endptr1,10);
+		fprintf(stderr, "firstArgument = strtok(userInput, )\n");/*todo delete*/
+	}
+
+
+	if (secondArgument != NULL) {
+		secondArgumentAsInt = (int)strtol(firstArgument,&endptr1,10);
+		fprintf(stderr, "2Argument = strtok(userInput, )\n");/*todo delete*/
+	}
+
+	if (thirdArgument != NULL) {
+		thirdArgumentAsInt = (int)strtol(firstArgument,&endptr1,10);
+		fprintf(stderr, "3Argument = strtok(userInput, )\n");/*todo delete*/
+	}
+
 	if (strcmp(command,"solve") == 0) {
 		/*check validity of argument: argument is not NULL*/
 		if (firstArgument == NULL) return 0;
@@ -100,12 +123,13 @@ int interact(Board* board){
 	/*if the 257th character is used it's an invalid command*/
 	fprintf(stderr, "passed fgets \n");
 	if (userInput[COMMAND_LENGTH] != '\0') {
-		printf("ERROR: invalid command\n");
+		fprintf(stderr, "into if block\n"); /*todo delete*/
+		printf("ERROR: invalid command\n");/*todo delete*/
 		/*empty the buffer leftovers*/
 		while ((bufferCleaner = getchar()) != '\n');
 		return 1;
 	}
-	fprintf(stderr, "passed if block\n");
+	fprintf(stderr, "passed if block\n");/*todo delete*/
 	switch(parseCommand(userInput,board)) {
 		case(11):
 			/* the last node added is a list of the autofill set moves. we start with the head of the list
