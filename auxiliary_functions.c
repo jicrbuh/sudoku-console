@@ -133,11 +133,17 @@ int exBackTracking(Board* board){
 
 /*undo == 1 if last command was undo
  *undo == 0 if last command was redo*/
-void printSetUndo(Board* board, int undo) { /*TODO AUX DOC*/
+void printSetUndoRedo(Board* board, int undo) { /*TODO AUX DOC*/
 	Node* revertedNode;
-	if (undo) {
+	/*if we did undo on the first move in the list*/
+	if (board->currNode == NULL) {
+		revertedNode = board->movesList->head;
+	}
+	/*else if the the command is undo*/
+	else if (undo) {
 		revertedNode = board->currNode->next;
 	}
+	/*else if the the command is redo*/
 	else {
 		revertedNode = board->currNode;
 	}
@@ -158,8 +164,8 @@ void printSetUndo(Board* board, int undo) { /*TODO AUX DOC*/
 							revertedNode->step->i, "_", revertedNode->step->old);
 		}
 		else {
-			printf("Redo %d,%d: from %s to %d\n", revertedNode->step->j,
-							revertedNode->step->i, "_", revertedNode->step->old);
+			printf("Redo %d,%d: from %d to %s\n", revertedNode->step->j,
+							revertedNode->step->i, revertedNode->step->old, "_");
 		}
 	}
 	else if (revertedNode->step->new != 0 && revertedNode->step->old == 0) {
@@ -168,8 +174,8 @@ void printSetUndo(Board* board, int undo) { /*TODO AUX DOC*/
 							revertedNode->step->i, revertedNode->step->new, "_");
 		}
 		else {
-			printf("Redo %d,%d: from %d to %s\n", revertedNode->step->j,
-							revertedNode->step->i, revertedNode->step->new, "_");
+			printf("Redo %d,%d: from %s to %d\n", revertedNode->step->j,
+							revertedNode->step->i, "_", revertedNode->step->new);
 		}
 
 	}
@@ -180,14 +186,14 @@ void printSetUndo(Board* board, int undo) { /*TODO AUX DOC*/
 		}
 		else {
 			printf("Redo %d,%d: from %d to %d\n", revertedNode->step->j,
-							revertedNode->step->i, revertedNode->step->new, revertedNode->step->old);
+							revertedNode->step->i, revertedNode->step->old, revertedNode->step->new);
 		}
 	}
 }
 
 /*undo == 1 if last command was undo
  *undo == 0 if last command was redo*/
-void printAutofillUndo(Board* board, int undo) { /*TODO AUX DOC*/
+void printAutofillUndoRedo(Board* board, int undo) { /*TODO AUX DOC*/
 	Node* innerNode;
 	if (undo) {
 		innerNode = board->currNode->next->step->list->tail;
@@ -338,7 +344,7 @@ void saveToFile(FILE* fptr,Board* board) {
 			/*if this is the end of a row write the cell with a line drop */
 			if (j == board->edgeSize-1) {
 				/*if in edit mode or cell is fixed mark cell as fixed*/
-				if (board->mode == 2 || board->isFixed[i][j]) {
+				if ((board->mode == 2 && board->matrix[i][j] != 0) || board->isFixed[i][j]) {
 					fprintf(fptr,"%d.\n",board->matrix[i][j]);
 				}
 				else {

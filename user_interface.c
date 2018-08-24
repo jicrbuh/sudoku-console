@@ -6,7 +6,7 @@
 #include "game_logic.h"
 #include "auxiliary_functions.h"
 #include "SPBufferset.h"
-#define COMMAND_LENGTH 257
+#define COMMAND_LENGTH 258
 /*parses user commands and calls the functions from game_logic (maybe)*/
 /*take strcmp at the beginning once, check if it's possible*/
 int parseCommand(char* userInput, Board* board){
@@ -84,19 +84,25 @@ int parseCommand(char* userInput, Board* board){
 	else if (strcmp(command, "exit") == 0) {
 		return userExit(board); /*available in all modes*/
 	}
+	else {
+		return 0;
+	}
 
 	return 1;
 }
 
 int interact(Board* board){
+	int bufferCleaner;
 	Node* autofillCurrNode;
 	char userInput[COMMAND_LENGTH] = {0};
 	printf("Enter your command\n");
 	fgets(userInput,COMMAND_LENGTH,stdin);
-	if (userInput[COMMAND_LENGTH-1] != '\0') {
+	if (userInput[COMMAND_LENGTH-2] != '\0') {
 		printf("ERROR: invalid command\n");
-	}
+		while ((bufferCleaner = getchar()) != '\n');
 
+		return 1;
+	}
 	/*calls read_command and prints errors if necessary (board->autofillCounter < board->autofillNumberOfCells)*/
 	switch(parseCommand(userInput,board)) {
 		case(11):
@@ -139,21 +145,27 @@ int interact(Board* board){
 			printf("Hint: set cell to %d\n", board->lastHint);
 			break;
 		case (4):
-			/*check if the last move was set (and not autofill)*/
-			if (board->currNode->next->step->list == NULL) {
-				printSetUndo(board, 1);
+			/*check if the last move was set (and not autofill) by two cases
+			 * first case: currNode is not null so check if the next node is set or autofill*/
+			if ((board->currNode != NULL && board->currNode->next->step->list == NULL) ||
+					/*second case: currNode is null, which means we used undo when currNode pointed at the head of the list
+					 * in this case, check the head node*/
+					(board->currNode == NULL && board->movesList->head->step->list == NULL)) {
+				printSetUndoRedo(board, 1);
 			}
 			else {
-				printAutofillUndo(board, 1);
+				printAutofillUndoRedo(board, 1);
 			}
 			break;
 		case (3):
 			/*check if the last undo was set (and not autofill)*/
-			if (board->currNode->next->step->list == NULL) {
-				printSetUndo(board, 0);
+			if (board->currNode->step->list == NULL) {
+				/*redo for a set move*/
+				printSetUndoRedo(board, 0);
 			}
 			else {
-				printAutofillUndo(board, 0);
+				/*redo for an autofill move move*/
+				printAutofillUndoRedo(board, 0);
 			}
 			break;
 		case (2):

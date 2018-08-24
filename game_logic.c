@@ -180,7 +180,7 @@ int redo(Board* board) {
 	else {
 		board->currNode = board->currNode->next;
 	}
-	/*else if the last undo was set (and not autofill) change the value*/
+	/*if the last undo was set (and not autofill) change the value*/
 	if (board->currNode->step->list == NULL) {
 		board->matrix[board->currNode->step->i][board->currNode->step->j] = board->currNode->step->new;
 	}
@@ -195,7 +195,7 @@ int redo(Board* board) {
 
 	print_board(board);
 
-	return 4;
+	return 3;
 }
 
 int save(Board* board, char* fileName) {
@@ -300,6 +300,9 @@ int autofill(Board* board, int firstCall, int x, int y, int z) {
 		if (numberOfFilledCells(board) == board->edgeSize*board->edgeSize) {
 			board->mode = 0;
 			clearList(board->movesList);
+			if (isBoardErr(board)) {
+				return 9;
+			}
 			return 10;
 		}
 		/*else the board is not completed and return 11*/
@@ -316,9 +319,8 @@ int reset(Board* board) {
 }
 
 int userExit(Board* board) {
-	/*message (8)*/
-	/*TODO exit function - free resources, implement after we are sure of all the resources in the program*/
-	return board->blockHeight;
+	destroyBoard(board);
+	return 8;
 }
 /*TODO when finishing implementing the functions update the arguments of the functions in the user interface calls functions from here*/
 /*calls the right function from game_logic*/

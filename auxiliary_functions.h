@@ -74,9 +74,9 @@ void loadToBoard(FILE* fptr, Board* board);
 
 
 
-void printSetUndo(Board* board, int undo);
+void printSetUndoRedo(Board* board, int undo);
 
-void printAutofillUndo(Board* board, int undo);
+void printAutofillUndoRedo(Board* board, int undo);
 
 void loadToBoard(FILE* fptr, Board* board);
 
