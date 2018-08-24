@@ -133,7 +133,7 @@ int exBackTracking(Board* board){
 
 /*undo == 1 if last command was undo
  *undo == 0 if last command was redo*/
-void printSetUndoRedo(Board* board, int undo) { /*TODO AUX DOC*/
+void printSetUndoRedo(Board* board, int undo) { /*TODO AUX DOC*/ /*TODO printSetUndoRedo fix redo vals (upside down)*/
 	Node* revertedNode;
 	/*if we did undo on the first move in the list*/
 	if (board->currNode == NULL) {

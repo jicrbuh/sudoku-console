@@ -30,13 +30,6 @@ int parseCommand(char* userInput, Board* board){
 	if (thirdArgument != NULL) {
 		thirdArgumentAsInt = (int)strtol(thirdArgument,&endptr3,10);
 	}
-
-
-
-
-
-
-
 	if (strcmp(command,"solve") == 0) {
 		/*check validity of argument: argument is not NULL*/
 		if (firstArgument == NULL) return 0;
@@ -109,6 +102,7 @@ int parseCommand(char* userInput, Board* board){
 }
 
 int interact(Board* board){
+	int autofillRetVal;
 	int bufferCleaner;
 	Node* autofillCurrNode;
 	char userInput[COMMAND_LENGTH+2] = {0};
@@ -116,15 +110,12 @@ int interact(Board* board){
 	printf("Enter your command:\n");
 	fgets(userInput,COMMAND_LENGTH+2,stdin);
 	/*if the 257th character is used it's an invalid command*/
-
 	if (userInput[COMMAND_LENGTH] != '\0') {
-
 		printf("ERROR: invalid command\n");
 		/*empty the buffer leftovers*/
 		while ((bufferCleaner = getchar()) != '\n');
 		return 1;
 	}
-
 	switch(parseCommand(userInput,board)) {
 		case(11):
 			/* the last node added is a list of the autofill set moves. we start with the head of the list
@@ -132,17 +123,22 @@ int interact(Board* board){
 			 * a message to the user and moving to next node */
 			autofillCurrNode = board->movesList->tail->step->list->head;
 			while (autofillCurrNode != NULL) {
-				autofill(board,0,autofillCurrNode->step->i,
-						autofillCurrNode->step->j,
-						autofillCurrNode->step->new);
+				autofillRetVal = autofill(board,0,autofillCurrNode->step->i,
+											autofillCurrNode->step->j,
+											autofillCurrNode->step->new);
 
 				printf("Cell <%d,%d> set to %d\n", autofillCurrNode->step->j+1,
 											autofillCurrNode->step->i+1,
 											autofillCurrNode->step->new);
-
 				autofillCurrNode = autofillCurrNode->next;
 			}
 			print_board(board);
+			if (autofillRetVal == 9) {
+				printf("Puzzle solution erroneous\n");
+			}
+			else if (autofillRetVal == 10) {
+				printf("Puzzle solved successfully\n");
+			}
 			break;
 		case(10):
 			printf("Puzzle solved successfully\n");

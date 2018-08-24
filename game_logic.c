@@ -288,9 +288,14 @@ int autofill(Board* board, int firstCall, int x, int y, int z) {
 				}
 			}
 		}
-		/* add the list of sets as a single move.
+		/* if there are moves to autofill add the list of sets as a single move.
 		 * Remark: this add is performed before all the autofill sets in list are done, but it isn't a problem
 		 * because no new moves can be done before all the autofill sets in list are done.*/
+		if (innerList->head == NULL) {
+			freeList(innerList);
+			print_board(board);
+			return 1;
+		}
 		addLast(board->movesList, createNode(createStep(0,0,0,0,innerList)));
 		/*update currNode*/
 		if (board->currNode == NULL) {
