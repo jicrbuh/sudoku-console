@@ -6,23 +6,26 @@
 #include "game_logic.h"
 #include "auxiliary_functions.h"
 #include "SPBufferset.h"
-#define COMMAND_LENGTH 258
-/*parses user commands and calls the functions from game_logic (maybe)*/
-/*take strcmp at the beginning once, check if it's possible*/
+#define COMMAND_LENGTH 256
+
 int parseCommand(char* userInput, Board* board){
 	char *endptr1, *endptr2, *endptr3, *firstArgument, *command;
 	int firstArgumentAsInt, secondArgumentAsInt, thirdArgumentAsInt, retVal;
+	/*store the name of the command*/
 	command = strtok(userInput," \t\r\n");
+	/*store first argument*/
 	firstArgument = strtok(NULL," \t\r\n");
+	/*store arguments 1,2,3 as ints*/
 	firstArgumentAsInt = (int)strtol(firstArgument,&endptr1,10);
 	secondArgumentAsInt = (int)strtol(strtok(NULL," \t\r\n"),&endptr2,10);
 	thirdArgumentAsInt = (int)strtol(strtok(NULL," \t\r\n"),&endptr3,10);
 	if (strcmp(command,"solve") == 0) {
-		if (firstArgument == NULL) return 0; /*check validity of argument: argument is not NULL*/
-		return solve(firstArgument, board); /*if we got here argument is valid, call the command's function*/
+		/*check validity of argument: argument is not NULL*/
+		if (firstArgument == NULL) return 0;
+		return solve(firstArgument, board);
 	}
 	else if (strcmp(command,"edit") == 0) {
-		return edit(firstArgument, board); /*no need to check validity, if NULL then solve knows its with 0 argument*/
+		return edit(firstArgument, board);
 	}
 	else if (strcmp(command,"mark_errors") == 0) {
 		if (board->mode != 1) return 0;
@@ -84,21 +87,17 @@ int parseCommand(char* userInput, Board* board){
 	else if (strcmp(command, "exit") == 0) {
 		return userExit(board); /*available in all modes*/
 	}
-	else {
-		return 0;
-	}
-
-	return 1;
+	return 0;
 }
 
 int interact(Board* board){
 	int bufferCleaner;
 	Node* autofillCurrNode;
-	char userInput[COMMAND_LENGTH] = {0};
+	char userInput[COMMAND_LENGTH+1] = {0};
 	printf("Enter your command:\n");
-	fgets(userInput,COMMAND_LENGTH-1,stdin);
+	fgets(userInput,COMMAND_LENGTH+1,stdin);
 	/*if the 257th character is used it's an invalid command*/
-	if (userInput[COMMAND_LENGTH-2] != '\0') {
+	if (userInput[COMMAND_LENGTH] != '\0') {
 		printf("ERROR: invalid command\n");
 		/*empty the buffer leftovers*/
 		while ((bufferCleaner = getchar()) != '\n');
@@ -181,7 +180,7 @@ int interact(Board* board){
 			printf("Error: File cannot be opened\n");
 			break;
 		case (-3):
-			printf("Error: the error should be 0 or 1\n");
+			printf("Error: the value should be 0 or 1\n");
 			break;
 		case (-4):
 			printf("Error: value not in range 0-%d\n",board->edgeSize);
