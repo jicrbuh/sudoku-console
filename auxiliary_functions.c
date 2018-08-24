@@ -149,44 +149,44 @@ void printSetUndoRedo(Board* board, int undo) { /*TODO AUX DOC*/
 	}
 	if (revertedNode->step->new == 0 && revertedNode->step->old == 0) {
 		if (undo) {
-			printf("Undo %d,%d: from %s to %s\n", revertedNode->step->j,
-							revertedNode->step->i, "_", "_");
+			printf("Undo %d,%d: from %s to %s\n", revertedNode->step->j+1,
+							revertedNode->step->i+1, "_", "_");
 		}
 		else {
-			printf("Redo %d,%d: from %s to %s\n", revertedNode->step->j,
-							revertedNode->step->i, "_", "_");
+			printf("Redo %d,%d: from %s to %s\n", revertedNode->step->j+1,
+							revertedNode->step->i+1, "_", "_");
 		}
 
 	}
 	else if (revertedNode->step->new == 0 && revertedNode->step->old != 0) {
 		if (undo) {
-			printf("Undo %d,%d: from %s to %d\n", revertedNode->step->j,
-							revertedNode->step->i, "_", revertedNode->step->old);
+			printf("Undo %d,%d: from %s to %d\n", revertedNode->step->j+1,
+							revertedNode->step->i+1, "_", revertedNode->step->old);
 		}
 		else {
-			printf("Redo %d,%d: from %d to %s\n", revertedNode->step->j,
-							revertedNode->step->i, revertedNode->step->old, "_");
+			printf("Redo %d,%d: from %d to %s\n", revertedNode->step->j+1,
+							revertedNode->step->i+1, revertedNode->step->old, "_");
 		}
 	}
 	else if (revertedNode->step->new != 0 && revertedNode->step->old == 0) {
 		if (undo) {
-			printf("Undo %d,%d: from %d to %s\n", revertedNode->step->j,
-							revertedNode->step->i, revertedNode->step->new, "_");
+			printf("Undo %d,%d: from %d to %s\n", revertedNode->step->j+1,
+							revertedNode->step->i+1, revertedNode->step->new, "_");
 		}
 		else {
-			printf("Redo %d,%d: from %s to %d\n", revertedNode->step->j,
-							revertedNode->step->i, "_", revertedNode->step->new);
+			printf("Redo %d,%d: from %s to %d\n", revertedNode->step->j+1,
+							revertedNode->step->i+1, "_", revertedNode->step->new);
 		}
 
 	}
 	else {
 		if (undo) {
-			printf("Undo %d,%d: from %d to %d\n", revertedNode->step->j,
-							revertedNode->step->i, revertedNode->step->new, revertedNode->step->old);
+			printf("Undo %d,%d: from %d to %d\n", revertedNode->step->j+1,
+							revertedNode->step->i+1, revertedNode->step->new, revertedNode->step->old);
 		}
 		else {
-			printf("Redo %d,%d: from %d to %d\n", revertedNode->step->j,
-							revertedNode->step->i, revertedNode->step->old, revertedNode->step->new);
+			printf("Redo %d,%d: from %d to %d\n", revertedNode->step->j+1,
+							revertedNode->step->i+1, revertedNode->step->old, revertedNode->step->new);
 		}
 	}
 }
@@ -196,7 +196,12 @@ void printSetUndoRedo(Board* board, int undo) { /*TODO AUX DOC*/
 void printAutofillUndoRedo(Board* board, int undo) { /*TODO AUX DOC*/
 	Node* innerNode;
 	if (undo) {
-		innerNode = board->currNode->next->step->list->tail;
+		if (board->currNode == NULL) {
+			innerNode = board->movesList->head->step->list->tail;
+		}
+		else {
+			innerNode = board->currNode->next->step->list->tail;
+		}
 	}
 	else {
 		innerNode = board->currNode->step->list->head;
@@ -204,43 +209,43 @@ void printAutofillUndoRedo(Board* board, int undo) { /*TODO AUX DOC*/
 	while (innerNode != NULL) {
 		if (innerNode->step->new == 0 && innerNode->step->old == 0) {
 			if (undo) {
-				printf("Undo %d,%d: from %s to %s\n", innerNode->step->j,
-									innerNode->step->i, "_", "_");
+				printf("Undo %d,%d: from %s to %s\n", innerNode->step->j+1,
+									innerNode->step->i+1, "_", "_");
 			}
 			else {
-				printf("Redo %d,%d: from %s to %s\n", innerNode->step->j,
-									innerNode->step->i, "_", "_");
+				printf("Redo %d,%d: from %s to %s\n", innerNode->step->j+1,
+									innerNode->step->i+1, "_", "_");
 			}
 		}
 		else if (innerNode->step->new == 0 && innerNode->step->old != 0) {
 			if (undo) {
-				printf("Undo %d,%d: from %s to %d\n", innerNode->step->j,
-						innerNode->step->i, "_", innerNode->step->old);
+				printf("Undo %d,%d: from %s to %d\n", innerNode->step->j+1,
+						innerNode->step->i+1, "_", innerNode->step->old);
 			}
 			else {
-				printf("Redo %d,%d: from %s to %d\n", innerNode->step->j,
-						innerNode->step->i, "_", innerNode->step->old);
+				printf("Redo %d,%d: from %s to %d\n", innerNode->step->j+1,
+						innerNode->step->i+1, "_", innerNode->step->old);
 			}
 		}
 		else if (innerNode->step->new != 0 && innerNode->step->old == 0) {
 			if (undo) {
-				printf("Undo %d,%d: from %d to %s\n", innerNode->step->j,
-						innerNode->step->i, innerNode->step->new, "_");
+				printf("Undo %d,%d: from %d to %s\n", innerNode->step->j+1,
+						innerNode->step->i+1, innerNode->step->new, "_");
 			}
 			else {
-				printf("Redo %d,%d: from %d to %s\n", innerNode->step->j,
-						innerNode->step->i, innerNode->step->new, "_");
+				printf("Redo %d,%d: from %d to %s\n", innerNode->step->j+1,
+						innerNode->step->i+1, innerNode->step->new, "_");
 			}
 
 		}
 		else {
 			if (undo) {
-				printf("Undo %d,%d: from %d to %d\n", innerNode->step->j,
-						innerNode->step->i, innerNode->step->new, innerNode->step->old);
+				printf("Undo %d,%d: from %d to %d\n", innerNode->step->j+1,
+						innerNode->step->i+1, innerNode->step->new, innerNode->step->old);
 			}
 			else {
-				printf("Redo %d,%d: from %d to %d\n", innerNode->step->j,
-						innerNode->step->i, innerNode->step->new, innerNode->step->old);
+				printf("Redo %d,%d: from %d to %d\n", innerNode->step->j+1,
+						innerNode->step->i+1, innerNode->step->new, innerNode->step->old);
 			}
 		}
 		if (undo) {

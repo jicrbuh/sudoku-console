@@ -95,15 +95,15 @@ int interact(Board* board){
 	int bufferCleaner;
 	Node* autofillCurrNode;
 	char userInput[COMMAND_LENGTH] = {0};
-	printf("Enter your command\n");
-	fgets(userInput,COMMAND_LENGTH,stdin);
+	printf("Enter your command:\n");
+	fgets(userInput,COMMAND_LENGTH-1,stdin);
+	/*if the 257th character is used it's an invalid command*/
 	if (userInput[COMMAND_LENGTH-2] != '\0') {
 		printf("ERROR: invalid command\n");
+		/*empty the buffer leftovers*/
 		while ((bufferCleaner = getchar()) != '\n');
-
 		return 1;
 	}
-	/*calls read_command and prints errors if necessary (board->autofillCounter < board->autofillNumberOfCells)*/
 	switch(parseCommand(userInput,board)) {
 		case(11):
 			/* the last node added is a list of the autofill set moves. we start with the head of the list
@@ -115,8 +115,8 @@ int interact(Board* board){
 						autofillCurrNode->step->j,
 						autofillCurrNode->step->new);
 
-				printf("Cell <%d,%d> set to %d\n", autofillCurrNode->step->j,
-											autofillCurrNode->step->i,
+				printf("Cell <%d,%d> set to %d\n", autofillCurrNode->step->j+1,
+											autofillCurrNode->step->i+1,
 											autofillCurrNode->step->new);
 
 				autofillCurrNode = autofillCurrNode->next;
@@ -145,12 +145,12 @@ int interact(Board* board){
 			printf("Hint: set cell to %d\n", board->lastHint);
 			break;
 		case (4):
-			/*check if the last move was set (and not autofill) by two cases
+			/* check if the last move was set (and not autofill) by two cases
 			 * first case: currNode is not null so check if the next node is set or autofill*/
-			if ((board->currNode != NULL && board->currNode->next->step->list == NULL) ||
+			if ((board->currNode == NULL && board->movesList->head->step->list == NULL) ||
 					/*second case: currNode is null, which means we used undo when currNode pointed at the head of the list
 					 * in this case, check the head node*/
-					(board->currNode == NULL && board->movesList->head->step->list == NULL)) {
+					(board->currNode != NULL && board->currNode->next->step->list == NULL)) {
 				printSetUndoRedo(board, 1);
 			}
 			else {

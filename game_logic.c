@@ -292,6 +292,13 @@ int autofill(Board* board, int firstCall, int x, int y, int z) {
 		 * Remark: this add is performed before all the autofill sets in list are done, but it isn't a problem
 		 * because no new moves can be done before all the autofill sets in list are done.*/
 		addLast(board->movesList, createNode(createStep(0,0,0,0,innerList)));
+		/*update currNode*/
+		if (board->currNode == NULL) {
+			board->currNode = board->movesList->head;
+		}
+		else {
+			board->currNode = board->currNode->next;
+		}
 		return 11;
 	}
 	else {
