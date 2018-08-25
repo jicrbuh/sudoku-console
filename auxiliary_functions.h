@@ -10,6 +10,21 @@
 #include "sudoku_board.h"
 
 
+/*
+ * Description:
+ * Checks whether s contains only whitespace chars
+ *
+ * Input:
+ * a string (char*)
+ *
+ * Output:
+ * 1 if s contains only whitespace
+ * 0 otherwise
+ *
+ * */
+int isEmpty(char* s);
+
+
 /*TODO TESTED
  *
  * Description:

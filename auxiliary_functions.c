@@ -4,7 +4,18 @@
 #include <assert.h>
 #include "sudoku_board.h"
 #include "doubly_linked_list.h"
+#include <ctype.h>
 
+
+/*returns 1 if all chars are whitespace*/
+int isEmpty(char* s) {
+  while (*s != '\0') {
+    if (!isspace((unsigned char)*s))
+      return 0;
+    s++;
+  }
+  return 1;
+}
 
 int isColErr(Board* board, int x, int y){
 	/*returns 1 if erroneous(relatively to row) or 0 else*/

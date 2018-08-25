@@ -106,14 +106,22 @@ int interact(Board* board){
 	int bufferCleaner;
 	Node* autofillCurrNode;
 	char userInput[COMMAND_LENGTH+2] = {0};
+
 	userInput[COMMAND_LENGTH] = '\0';
 	printf("Enter your command:\n");
 	fgets(userInput,COMMAND_LENGTH+2,stdin);
+
 	/*if the 257th character is used it's an invalid command*/
 	if (userInput[COMMAND_LENGTH] != '\0') {
 		printf("ERROR: invalid command\n");
 		/*empty the buffer leftovers*/
 		while ((bufferCleaner = getchar()) != '\n');
+
+		return 1;
+	}
+
+	/*if line is empty, do nothing*/
+	if (isEmpty(userInput) == 1) {
 		return 1;
 	}
 	switch(parseCommand(userInput,board)) {
