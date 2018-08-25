@@ -146,6 +146,8 @@ int interact(Board* board){
 			}
 			else if (autofillRetVal == 10) {
 				printf("Puzzle solved successfully\n");
+				board->mode = 0;
+				clearList(board->movesList);
 			}
 			break;
 		case(10):
