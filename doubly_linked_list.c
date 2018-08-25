@@ -147,7 +147,7 @@ void addFirst(DLL* list, Node* node) {
 void clearList(DLL* list) {
 	Node* currNode = list->tail;
 	while (currNode != NULL) {
-		free(currNode);
+		freeNode(currNode);
 		currNode = currNode->prev;
 	}
 	list->tail = NULL;
