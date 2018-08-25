@@ -19,6 +19,8 @@ int solve(char* fileName, Board* board) {
 	loadToBoard(file,board);
 	/*enters solve mode*/
 	board->mode = 1;
+	/*clear moveslist*/
+	clearList(board->movesList);
 	return 1;
 }
 
@@ -41,6 +43,8 @@ int edit(char* fileName, Board* board) {
 	loadToBoard(file,board);
 	/*enters edit mode*/
 	board->mode = 2;
+	/*clear moveslist*/
+	clearList(board->movesList);
 	return 1;
 }
 
@@ -308,6 +312,7 @@ int autofill(Board* board, int firstCall, int x, int y, int z) {
 	}
 	else {
 		board->matrix[x][y] = z;
+
 		/*if the board is full then it is also valid hence returns 10*/
 		if (numberOfFilledCells(board) == board->edgeSize*board->edgeSize) {
 			board->mode = 0;

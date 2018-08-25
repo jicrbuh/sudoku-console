@@ -61,20 +61,26 @@ void printListFromTail(DLL* list) {
 }
 
 void freeStep(Step* step) {
+	printf("trying to free step: \n");/*todo delete*/
 	if (step != NULL) {
 		if (step->list != NULL) {
 			freeList(step->list);
 		}
+		printStep(step); /*todo delete*/
 		free(step);
 	}
 }
 
 void freeNode(Node* node) {
+	printf("trying to free node: \n");/*todo delete*/
 	if (node != NULL) {
+
 		freeStep(node->step);
+
+		free(node);
 	}
 
-	free(node);
+
 }
 
 void freeList (DLL* list) {
@@ -115,7 +121,7 @@ Node* createNode(Step *step) { /*TODO formerly createNode*/
 
 
 void addLast(DLL* list, Node* node) {
-	printf("adding node to the tail of the list\n");
+	/*printf("adding node to the tail of the list\n");*/
 	if (list->head == NULL) { /*if the list is empty*/
 		assert(list->tail == NULL); /*if head is null, tail should be null, because list is empty*/
 		list->head = node;
@@ -129,7 +135,7 @@ void addLast(DLL* list, Node* node) {
 }
 
 void addFirst(DLL* list, Node* node) {
-	printf("adding node to the head of the list\n"); /*TODO ZZZ FOR DEBUG ONLY ZZZ*/
+	/*printf("adding node to the head of the list\n");*/ /*TODO ZZZ FOR DEBUG ONLY ZZZ*/
 	if (list->head == NULL) { /*if the list is empty*/
 			assert(list->tail == NULL); /*if head is null, tail should be null, because list is empty*/
 			list->head = node;
@@ -146,9 +152,11 @@ void addFirst(DLL* list, Node* node) {
 }
 void clearList(DLL* list) {
 	Node* currNode = list->tail;
+	Node* prevNode = NULL;
 	while (currNode != NULL) {
+		prevNode = currNode->prev;
 		freeNode(currNode);
-		currNode = currNode->prev;
+		currNode = prevNode;
 	}
 	list->tail = NULL;
 	list->head = NULL;
