@@ -78,7 +78,7 @@ void freeNode(Node* node) {
 	if (node != NULL) {
 
 		freeStep(node->step);
-		/*node->step = NULL;todo delete*/
+		/*node->step = NULL;todo todo added for valgrind*/
 		free(node);
 
 	}
@@ -92,11 +92,10 @@ void freeList (DLL* list) {
 	while (curr != NULL) {
 		next = curr->next;
 		freeNode(curr);
-		/*curr = NULL;todo delete*/
 		curr = next;
 	}
 	free(list);
-	/*list = NULL;todo delete*/
+	/*list = NULL;todo added for valgrind*/
 }
 
 void clearList(DLL* list) {

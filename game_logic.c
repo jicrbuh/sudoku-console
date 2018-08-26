@@ -19,6 +19,8 @@ int solve(char* fileName, Board* board) {
 	loadToBoard(file,board);
 	/*enters solve mode*/
 	board->mode = 1;
+	/*clears moveslist*/
+	clearList(board->movesList);
 	return 1;
 }
 
@@ -41,6 +43,8 @@ int edit(char* fileName, Board* board) {
 	loadToBoard(file,board);
 	/*enters edit mode*/
 	board->mode = 2;
+	/*clears moveslist*/
+	clearList(board->movesList);
 	return 1;
 }
 
