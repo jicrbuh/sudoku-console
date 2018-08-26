@@ -15,6 +15,7 @@ DLL* createEmptyList() {
 	DLL* list = (DLL*)malloc(sizeof(DLL));
 	list->head=NULL;
 	list->tail=NULL;
+	printf("size of list: %d\n",(int)sizeof(DLL));
 	return list;
 }
 
@@ -68,6 +69,7 @@ void freeStep(Step* step) {
 		}
 		printStep(step); /*todo delete*/
 		free(step);
+
 	}
 }
 
@@ -76,11 +78,10 @@ void freeNode(Node* node) {
 	if (node != NULL) {
 
 		freeStep(node->step);
-
+		/*node->step = NULL;todo delete*/
 		free(node);
+
 	}
-
-
 }
 
 void freeList (DLL* list) {
@@ -91,10 +92,23 @@ void freeList (DLL* list) {
 	while (curr != NULL) {
 		next = curr->next;
 		freeNode(curr);
+		/*curr = NULL;todo delete*/
 		curr = next;
 	}
 	free(list);
+	/*list = NULL;todo delete*/
+}
 
+void clearList(DLL* list) {
+	Node* currNode = list->tail;
+	Node* prevNode = NULL;
+	while (currNode != NULL) {
+		prevNode = currNode->prev;
+		freeNode(currNode);
+		currNode = prevNode;
+	}
+	list->tail = NULL;
+	list->head = NULL;
 }
 
 Step* createStep (int i, int j, int old, int new, DLL* list) {
@@ -104,6 +118,7 @@ Step* createStep (int i, int j, int old, int new, DLL* list) {
 	step->old = old;
 	step->new = new;
 	step->list = list;
+	printf("size of step: %d\n",(int)sizeof(step));
 	return step;
 }
 
@@ -116,6 +131,7 @@ Node* createNode(Step *step) { /*TODO formerly createNode*/
 	node->next = NULL;
 	node->prev = NULL;
 	node->step = step;
+	printf("size of node: %d\n",(int)sizeof(node));
 	return node;
 }
 
@@ -150,17 +166,7 @@ void addFirst(DLL* list, Node* node) {
 		node->prev = NULL;
 	}
 }
-void clearList(DLL* list) {
-	Node* currNode = list->tail;
-	Node* prevNode = NULL;
-	while (currNode != NULL) {
-		prevNode = currNode->prev;
-		freeNode(currNode);
-		currNode = prevNode;
-	}
-	list->tail = NULL;
-	list->head = NULL;
-}
+
 
 void deleteAllNextNodes(DLL* list, Node* node) {
 
