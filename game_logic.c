@@ -250,7 +250,7 @@ int hint(Board* board, int x, int y) {
 	 * if no error occurred return the value the ILP suggested for cell (x,y) - message (5) + the value!
 	 * */
 
-	Board copiedBoard = NULL;
+	Board* copiedBoard = NULL;
 	int solved;
 
 	if (x<0 || y<0 || x > board->edgeSize-1 || y > board->edgeSize-1) {
