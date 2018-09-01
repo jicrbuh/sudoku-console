@@ -23,6 +23,8 @@ int solve(char* fileName, Board* board) {
 	board->mode = 1;
 	/*clears moveslist*/
 	clearList(board->movesList);
+	/*prints board*/
+	printBoard(board);
 	return 1;
 }
 
@@ -33,6 +35,7 @@ int edit(char* fileName, Board* board) {
 	if (fileName == NULL) {
 		initAsDefaultBoard(board);
 		board->mode = 2;
+		printBoard(board);
 		return 1;
 	}
 	/*else, opens the file*/
@@ -47,6 +50,7 @@ int edit(char* fileName, Board* board) {
 	board->mode = 2;
 	/*clears moveslist*/
 	clearList(board->movesList);
+	printBoard(board);
 	return 1;
 }
 
@@ -146,6 +150,7 @@ int generate(Board* board, int x, int y) {
 		if (solver(board,1) == 0){
 			/*erase y random cells*/
 			eraseAllButYRandomCells(board,y);
+			printBoard(board);
 			return 1;
 		}
 		errorCounter++;
