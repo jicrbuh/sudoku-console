@@ -15,7 +15,6 @@ DLL* createEmptyList() {
 	DLL* list = (DLL*)malloc(sizeof(DLL));
 	list->head=NULL;
 	list->tail=NULL;
-	printf("size of list: %d\n",(int)sizeof(DLL));
 	return list;
 }
 
@@ -62,7 +61,7 @@ void printListFromTail(DLL* list) {
 }
 
 void freeStep(Step* step) {
-	printf("trying to free step: \n");/*todo delete*/
+
 	if (step != NULL) {
 		if (step->list != NULL) {
 			freeList(step->list);
@@ -74,7 +73,7 @@ void freeStep(Step* step) {
 }
 
 void freeNode(Node* node) {
-	printf("trying to free node: \n");/*todo delete*/
+
 	if (node != NULL) {
 
 		freeStep(node->step);
@@ -117,7 +116,7 @@ Step* createStep (int i, int j, int old, int new, DLL* list) {
 	step->old = old;
 	step->new = new;
 	step->list = list;
-	printf("size of step: %d\n",(int)sizeof(step));
+
 	return step;
 }
 
@@ -130,7 +129,7 @@ Node* createNode(Step *step) { /*TODO formerly createNode*/
 	node->next = NULL;
 	node->prev = NULL;
 	node->step = step;
-	printf("size of node: %d\n",(int)sizeof(node));
+
 	return node;
 }
 
@@ -187,9 +186,9 @@ void deleteAllNextNodes(DLL* list, Node* node) {
 
 void deleteLast(DLL* list) {
 	Node* node = NULL;
-	printf("deleting last node\n");
+
 	if (list->head == NULL) { /*if list is empty, do nothing*/
-		printf("attempting to delete last item of an empty list");
+
 		return;
 	}
 	else {
@@ -202,9 +201,9 @@ void deleteLast(DLL* list) {
 
 void deleteFirst(DLL* list) {
 	Node* node = NULL;
-	printf("deleting first node\n");
+
 	if (list->head == NULL) { /*if list is empty, do nothing*/
-		printf("attempting to delete first item of an empty list");
+
 		return;
 	}
 	else {

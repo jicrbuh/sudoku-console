@@ -17,9 +17,10 @@ void addConstr(int dim, int blockLength, int blockHeight, int* ind, double* val,
 void freeOnlyMatrix(int** matrix, int dim);
 void printArr(double* val, int dim); /*todo delete only this function*/
 void insertSol(double* sol, int** matrix, int dim);
-int findCellSol(double* sol, int** matrix, int dim, int x, int y);
+int findCellSol(double* sol, int dim, int x, int y);
 void printMtxNoBoard(int** matrix, int dim);
 void increment(int** matrix, int size);
+int createMatrix(int** matrix, int size);
 
 /* Based on the example in the GUROBI website.
  *
@@ -31,14 +32,14 @@ void increment(int** matrix, int size);
 int solver(Board* board, int saveToBoard) {
 	GRBenv   *env   = NULL;
 	GRBmodel *model = NULL;
-	int       i, j, v, ig, jg, optimstatus, count,zero = 0, error = 0,dim = board->edgeSize;
-	int*		ind = (int*)calloc(dim,sizeof(int));
+	int       optimstatus, error = 0,dim = board->edgeSize;
+	int*	ind = (int*)calloc(dim,sizeof(int));
 	double*   val = (double*)calloc(dim,sizeof(double));
 	double*   lb = (double*)calloc(dim*dim*dim,sizeof(double)); /* variable lower bounds */
 	char*     vtype = (char*)calloc(dim*dim*dim,sizeof(char));
 	char**    names = (char**)calloc(dim*dim*dim,sizeof(char*));
 	char*     namestorage= (char*)calloc(10*dim*dim*dim,sizeof(char));
-	char*     cursor;
+	char*     cursor=NULL;
 	double    objval;
 	double* 	sol = (double*)calloc(dim*dim*dim,sizeof(double));
 	int ** 	copiedMtx;
@@ -88,18 +89,18 @@ int solver(Board* board, int saveToBoard) {
 	error = GRBgetdblattr(model, GRB_DBL_ATTR_OBJVAL, &objval);
 	if (error) goto QUIT;
 
-	/*printf("\nOptimization complete\n");/*todo delete*/
+	/*printf("\nOptimization complete\n");todo delete*/
 
 	if (optimstatus == GRB_OPTIMAL) {
-		/*printf("Optimal objective: %.4e\n", objval);/*todo delete*/
+		/*printf("Optimal objective: %.4e\n", objval);todo delete*/
 	}
 
 	else if (optimstatus == GRB_INF_OR_UNBD) {
-		/*printf("Model is infeasible or unbounded\n");/*todo delete*/
+		/*printf("Model is infeasible or unbounded\n");todo delete*/
 		goto QUIT;
 	}
 	else {
-		/*printf("Optimization was stopped early\n\n");/*todo delete*/
+		/*printf("Optimization was stopped early\n\n");todo delete*/
 		goto QUIT;
 	}
 
@@ -178,10 +179,11 @@ void createEmptyProj(int dim, int** matrix, char** names, char* vtype, double* l
 				else {
 					lb[i*dim*dim+j*dim+v] = 0;
 				}
-		vtype[i*dim*dim+j*dim+v] = GRB_BINARY;
-		names[i*dim*dim+j*dim+v] = cursor;
-		sprintf(names[i*dim*dim+j*dim+v], "x[%d,%d,%d]", i, j, v+1);
-		cursor += strlen(names[i*dim*dim+j*dim+v]) + 1;
+			vtype[i*dim*dim+j*dim+v] = GRB_BINARY;
+			names[i*dim*dim+j*dim+v] = cursor;
+			sprintf(names[i*dim*dim+j*dim+v], "x[%d,%d,%d]", i, j, v+1);
+			cursor += strlen(names[i*dim*dim+j*dim+v]) + 1;
+			(void)cursor;
 			}
 		}
 	}
@@ -299,19 +301,19 @@ void printArr(double* val, int dim) {
 /*reads the solution from sol[] into matrix*/
 void insertSol(double* sol, int** matrix, int dim) {
 	/*sol is a [dim*dim*dim] array. matrix is a [dim][dim] matrix*/
-	int i,j, val;
+	int i,j;
 	for(i=0; i<dim; i++) {
 		for(j=0; j<dim; j++) {
 			if(matrix[i][j] == 0) { /*if the cell is empty, find its right value in sol*/
-				matrix[i][j] = findCellSol(sol,matrix, dim, i, j);
+				matrix[i][j] = findCellSol(sol, dim, i, j);
 			}
 		}
 	}
 }
 /*returns cell x,y value according to the solution array sol[dim*dim*dim]
  * if can't find one, returns -1*/
-int findCellSol(double* sol, int** matrix, int dim, int x, int y) {
-	int i,v;
+int findCellSol(double* sol, int dim, int x, int y) {
+	int i;
 	int start =	dim*dim*x + dim*y;
 	for (i=0; i<dim; i++) {
 		if ((int)sol[start+i] == 1) {
