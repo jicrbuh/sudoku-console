@@ -254,11 +254,13 @@ int test_loads(Board *board) {
 	return 0;
 }
 int main() {
+
 	int gameActive = 1;
 	Board* board = createBoard(2,2);
+	srand(time(NULL));
 	printf("Sudoku\n------\n");
 	while (gameActive) {
-		if (interact(board)==-2) {
+		if (interact(board) == -2) {
 			gameActive = 0;
 		}
 	}
