@@ -249,6 +249,10 @@ int hint(Board* board, int x, int y) {
 	 *
 	 * if no error occurred return the value the ILP suggested for cell (x,y) - message (5) + the value!
 	 * */
+
+	Board copiedBoard = NULL;
+	int solved;
+
 	if (x<0 || y<0 || x > board->edgeSize-1 || y > board->edgeSize-1) {
 		return -4;
 	}
@@ -261,10 +265,19 @@ int hint(Board* board, int x, int y) {
 	if (board->matrix[x][y] != 0) {
 		return -14;
 	}
-	if (!ILPSolver(board)) {
+
+	/*create a copy of the board, so it can save the solved board from solver()*/
+	copiedBoard = copyBoard(board);
+	solved = solver(copiedBoard,1);
+	if (solved != 0) { /*if board is unsolvable*/
+		destroyBoard(copiedBoard);
 		return -15;
 	}
+	else {/*if board is solvable*/
+		board->lastHint = copiedBoard->matrix[x][y]; /*save the hint in board->lastHint*/
+	}
 	/*TODO after ILP update board->lastHint*/
+	destroyBoard(copiedBoard);
 	return 5;
 }
 

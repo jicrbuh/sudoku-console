@@ -2,7 +2,7 @@
  * newDLL.c
  *
  *  Created on: 6 Aug 2018
- *      Author: chen
+ *
  */
 #include <stdio.h>
 #include <string.h>
@@ -66,7 +66,7 @@ void freeStep(Step* step) {
 		if (step->list != NULL) {
 			freeList(step->list);
 		}
-		printStep(step); /*todo delete*/
+
 		free(step);
 
 	}
