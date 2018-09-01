@@ -5,6 +5,8 @@
 #include "doubly_linked_list.h"
 #include "auxiliary_functions.h"
 #include "SPBufferset.h"
+#include "ilp_solver.h"
+#define MAX_ITER 20
 
 
 
@@ -64,15 +66,22 @@ int print_board(Board* board) {
 }
 
 int validate(Board* board) {
+	int count = 0;
+	int solved = 1;
 	/*check if board is erroneous*/
 	if (isBoardErr(board)) {
 		return -6;
 	}
 	/*check if the board is solvable*/
-	if (1==1) {
-		return 2;
+	/*check MAX_ITER times because sometimes gurobi optimization times out for no reason*/
+	while (count < MAX_ITER) {
+		solved = solver(board,0);
+		if (solved == 0) {
+			return 2; /*validation passed*/
+		}
+		count++;
 	}
-	return -7;
+	return -7; /*validation failed*/
 }
 
 int set(int x, int y, int z, Board* board) {
@@ -134,7 +143,7 @@ int generate(Board* board, int x, int y) {
 		fillXRandomCells(board,x);
 
 		/*if ILP successfully filled all the empty cells*/
-		if (ILPSolver(board)){
+		if (solver(board,1) == 0){
 			/*erase y random cells*/
 			eraseAllButYRandomCells(board,y);
 			return 1;
